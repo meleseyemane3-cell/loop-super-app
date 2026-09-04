@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="am">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LOOP Super App</title>
+    <!-- Supabase CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -11,602 +13,261 @@
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
         body {
-            background-color: #080c14;
-            color: #ffffff;
+            background-color: #f0f2f5;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 12px;
         }
-
-        .container {
+        .app-container {
             width: 100%;
-            max-width: 440px;
+            max-width: 480px;
+            background: #fff;
+            min-height: 100vh;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
             display: flex;
             flex-direction: column;
-            gap: 16px;
         }
-
         header {
-            text-align: center;
-            padding: 10px 0;
-        }
-
-        header h1 {
-            font-size: 1.7rem;
-            color: #ffffff;
-            font-weight: 800;
-        }
-
-        header p {
-            font-size: 0.8rem;
-            color: #8a99ad;
-            margin-top: 4px;
-            letter-spacing: 0.5px;
-        }
-
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-        }
-
-        .service-card {
-            background-color: #111827;
-            border: 1px solid #1f293d;
-            border-radius: 14px;
-            padding: 14px 6px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .service-card:hover {
-            border-color: #ff6b00;
-            background-color: #1a233a;
-        }
-
-        .service-card .icon {
-            font-size: 1.5rem;
-        }
-
-        .service-card span {
-            font-size: 0.78rem;
-            font-weight: 600;
-            text-align: center;
-            color: #ffffff;
-        }
-
-        .social-box {
-            background-color: #111827;
-            border: 1px solid #1f293d;
-            border-radius: 16px;
-            padding: 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .social-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: 700;
-            font-size: 0.95rem;
-            color: #ff6b00;
-        }
-
-        .live-btn {
-            background: #dc2626;
+            padding: 15px 20px;
+            background: #4f46e5;
             color: white;
-            font-size: 0.72rem;
-            padding: 5px 12px;
-            border-radius: 20px;
-            border: none;
+            font-size: 20px;
             font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
+            text-align: center;
         }
-
-        .live-btn.active {
-            background: #16a34a;
-        }
-
-        .post-textarea {
-            width: 100%;
-            background-color: #080c14;
-            border: 1px solid #1f293d;
-            border-radius: 10px;
-            padding: 10px;
-            color: #ffffff;
-            font-size: 0.85rem;
-            resize: none;
-            height: 75px;
-            outline: none;
-        }
-
-        .post-textarea:focus {
-            border-color: #ff6b00;
-        }
-
-        .post-actions-row {
-            display: flex;
-            gap: 6px;
-        }
-
-        .action-chip {
+        .content {
             flex: 1;
-            background-color: #080c14;
-            border: 1px solid #1f293d;
+            padding: 15px;
+            overflow-y: auto;
+        }
+        .post-box {
+            background: #fff;
+            border: 1px solid #ddd;
             border-radius: 8px;
-            padding: 8px 4px;
-            color: #94a3b8;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-align: center;
-            cursor: pointer;
+            padding: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
-
-        .action-chip.selected {
-            border-color: #ff6b00;
-            color: #ff6b00;
-            background: rgba(255, 107, 0, 0.1);
-        }
-
-        .submit-post-btn {
+        .post-box textarea {
             width: 100%;
-            background: linear-gradient(135deg, #cc3300, #ff6b00);
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            padding: 10px;
+            resize: none;
+            font-size: 14px;
+            outline: none;
+            margin-bottom: 10px;
+        }
+        .post-box textarea:focus {
+            border-color: #4f46e5;
+        }
+        .post-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .post-actions input[type="file"] {
+            font-size: 12px;
+        }
+        button {
+            background: #4f46e5;
             color: white;
             border: none;
-            border-radius: 10px;
-            padding: 11px;
-            font-size: 0.9rem;
-            font-weight: 700;
+            padding: 8px 16px;
+            border-radius: 6px;
             cursor: pointer;
+            font-weight: bold;
         }
-
-        .feed-container {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            max-height: 350px;
-            overflow-y: auto;
-            margin-top: 5px;
+        button:hover {
+            background: #4338ca;
         }
-
-        .feed-card {
-            background: #080c14;
-            border: 1px solid #1f293d;
-            border-radius: 12px;
+        .feed {
+            margin-top: 20px;
+        }
+        .card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
             padding: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+            margin-bottom: 12px;
         }
-
-        .feed-user-info {
+        .card p {
+            font-size: 14px;
+            margin-bottom: 8px;
+            word-break: break-word;
+        }
+        .card img, .card video {
+            width: 100%;
+            border-radius: 6px;
+            max-height: 300px;
+            object-fit: cover;
+            margin-top: 8px;
+        }
+        .card-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-top: 10px;
+            font-size: 12px;
+            color: #666;
         }
-
-        .feed-username {
-            font-size: 0.82rem;
-            font-weight: bold;
-            color: #ff6b00;
+        .like-btn {
+            background: transparent;
+            color: #4f46e5;
+            border: 1px solid #4f46e5;
+            padding: 4px 10px;
+            font-size: 12px;
         }
-
-        .follow-btn {
-            background: rgba(0, 102, 255, 0.2);
-            color: #3b82f6;
-            border: 1px solid #3b82f6;
-            padding: 2px 8px;
-            font-size: 0.7rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .follow-btn.following {
-            background: #22c55e;
-            color: #fff;
-            border-color: #22c55e;
-        }
-
-        .feed-text {
-            font-size: 0.82rem;
-            color: #e2e8f0;
-            line-height: 1.4;
-        }
-
-        .feed-media-preview {
-            width: 100%;
-            max-height: 200px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-top: 4px;
-        }
-
-        .feed-interactions {
-            display: flex;
-            justify-content: space-between;
-            border-top: 1px solid #1f293d;
-            padding-top: 8px;
-            font-size: 0.75rem;
-            color: #94a3b8;
-        }
-
-        .interaction-action {
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .interaction-action:hover {
-            color: #ff6b00;
-        }
-
-        .comments-section {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            margin-top: 4px;
-            border-top: 1px dashed #1f293d;
-            padding-top: 6px;
-        }
-
-        .comment-item {
-            font-size: 0.75rem;
-            color: #cbd5e1;
-            background: #111827;
-            padding: 4px 8px;
-            border-radius: 6px;
-        }
-
-        .live-view-box {
-            display: none;
-            background: #161b22;
-            border: 2px solid #dc2626;
-            border-radius: 12px;
-            padding: 10px;
-            text-align: center;
-            margin-bottom: 5px;
-        }
-
-        .live-video-sim {
-            width: 100%;
-            height: 180px;
-            background: #000;
-            border-radius: 8px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        #liveVideoElement {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transform: scaleX(-1);
-        }
-
-        .live-badge-on {
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            background: #dc2626;
+        .like-btn:hover {
+            background: #4f46e5;
             color: white;
-            padding: 2px 6px;
-            font-size: 0.65rem;
-            border-radius: 4px;
-            z-index: 10;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
-            justify-content: center;
-            align-items: center;
-            padding: 16px;
-            z-index: 1000;
-        }
-        .modal-content {
-            background: #111827;
-            border: 1px solid #ff6b00;
-            width: 100%;
-            max-width: 380px;
-            border-radius: 16px;
-            padding: 18px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: bold;
-            font-size: 1rem;
-            color: #ff6b00;
-        }
-        .close-btn {
-            background: none; border: none; color: #8a99ad; font-size: 1.2rem; cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-    <input type="file" id="photoInput" accept="image/*" capture="environment" style="display: none;" onchange="handleFileSelected(event, 'photo')">
-    <input type="file" id="videoInput" accept="video/*" capture="environment" style="display: none;" onchange="handleFileSelected(event, 'video')">
-    <input type="file" id="fileInput" accept="*/*" style="display: none;" onchange="handleFileSelected(event, 'file')">
-
-    <div class="container">
-        <header>
-            <h1>LOOP Super App</h1>
-            <p>Connect • Discover • Communicate • Pay</p>
-        </header>
-
-        <div class="dashboard-grid">
-            <div class="service-card" onclick="openModule('LOOP Tourism', 'Explore amazing tourist destinations, hotels and transport booking systems across Ethiopia.')">
-                <div class="icon">✈️</div>
-                <span>Tourism</span>
-            </div>
-            <div class="service-card" onclick="openModule('LOOP Sports', 'Live match updates, scores, and league standings.')">
-                <div class="icon">⚽</div>
-                <span>Sports</span>
-            </div>
-            <div class="service-card" onclick="openModule('LOOP Chat', 'Global chat framework equipped with instant messaging and AI translation.')">
-                <div class="icon">💬</div>
-                <span>Chat</span>
-            </div>
-            <div class="service-card" onclick="openModule('LOOP AI Assistant', 'Your smart assistant ready to help with any request instantly.')">
-                <div class="icon">🤖</div>
-                <span>AI Assistant</span>
-            </div>
-            <div class="service-card" onclick="openModule('LOOP News', 'Latest multi-sector national and international news.')">
-                <div class="icon">📖</div>
-                <span>News</span>
-            </div>
-            <div class="service-card" onclick="openModule('LOOP Weather', 'Accurate weather forecasts for various cities.')">
-                <div class="icon">🌤️</div>
-                <span>Weather</span>
-            </div>
-        </div>
-
-        <div class="social-box">
-            <div class="social-header">
-                <span>👥 LOOP Family</span>
-                <button class="live-btn" id="liveToggleBtn" onclick="toggleLive()">🔴 Go Live</button>
-            </div>
-
-            <div class="live-view-box" id="liveViewBox">
-                <div class="live-video-sim">
-                    <span class="live-badge-on">● LIVE ON AIR</span>
-                    <video id="liveVideoElement" autoplay playsinline></video>
-                </div>
-                <p style="font-size: 0.75rem; color: #94a3b8; margin-top: 6px;">Your live camera stream is broadcasting...</p>
-            </div>
-            
-            <textarea class="post-textarea" id="postInput" placeholder="What's on your mind? Share text, photo, video or file..."></textarea>
-            
-            <div class="post-actions-row">
-                <div class="action-chip" id="chipPhoto" onclick="triggerFileInput('photo')">📷 Photo</div>
-                <div class="action-chip" id="chipVideo" onclick="triggerFileInput('video')">🎥 Video</div>
-                <div class="action-chip" id="chipFile" onclick="triggerFileInput('file')">📁 File</div>
-            </div>
-
-            <button class="submit-post-btn" onclick="submitPost()">Post</button>
-
-            <div class="feed-container" id="feedContainer">
-                <div class="feed-card">
-                    <div class="feed-user-info">
-                        <span class="feed-username">Melese Yimane (Developer)</span>
-                        <button class="follow-btn" onclick="toggleFollow(this)">Follow</button>
-                    </div>
-                    <div class="feed-text">Welcome to LOOP Family! 🚀 You can now post updates, like, comment, and go live seamlessly.</div>
-                    <div class="feed-interactions">
-                        <span class="interaction-action" onclick="likePost(this)">❤️ <span class="like-count">15</span> Likes</span>
-                        <span class="interaction-action" onclick="openCommentBox(this)">💬 Comment</span>
-                        <span class="interaction-action" onclick="sharePost()">🔄 Share</span>
-                    </div>
-                    <div class="comments-section" style="display:none;"></div>
+    <div class="app-container">
+        <header>LOOP Super App</header>
+        
+        <div class="content">
+            <!-- Post Creation Box -->
+            <div class="post-box">
+                <textarea id="postContent" rows="3" placeholder="ምን እየተሰማዎት ነው? ሐሳብዎን ያካፍሉ..."></textarea>
+                <div class="post-actions">
+                    <input type="file" id="mediaFile" accept="image/*,video/*">
+                    <button onclick="createPost()">ለጥፍ (Post)</button>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <div class="modal" id="moduleModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span id="modalTitle">Module</span>
-                <button class="close-btn" onclick="closeModule()">✕</button>
+            <!-- Posts Feed -->
+            <div class="feed" id="postsFeed">
+                <p style="text-align: center; color: #777;">ፖስቶች በመጫን ላይ...</p>
             </div>
-            <p id="modalDesc" style="color: #94a3b8; font-size: 0.88rem; line-height: 1.5;"></p>
-            <button class="submit-post-btn" onclick="closeModule()">Back</button>
         </div>
     </div>
 
     <script>
-        let attachedMediaFile = null;
-        let attachedMediaType = "";
-        let attachedMediaUrl = "";
-        let isLiveActive = false;
-        let mediaStreamObj = null;
+        // Supabase Credentials (የእርስዎን Supabase URL እና Anon Key እዚህ ያስገቡ)
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
-        function openModule(name, desc) {
-            document.getElementById('modalTitle').textContent = name;
-            document.getElementById('modalDesc').textContent = desc;
-            document.getElementById('moduleModal').style.display = 'flex';
-        }
-        function closeModule() {
-            document.getElementById('moduleModal').style.display = 'none';
-        }
+        const { createClient } = supabase;
+        const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        function triggerFileInput(type) {
-            if(type === 'photo') {
-                document.getElementById('photoInput').click();
-            } else if(type === 'video') {
-                document.getElementById('videoInput').click();
-            } else if(type === 'file') {
-                document.getElementById('fileInput').click();
-            }
-        }
-
-        function handleFileSelected(event, type) {
-            const file = event.target.files[0];
-            if(!file) return;
-
-            attachedMediaFile = file;
-            attachedMediaType = type;
-            attachedMediaUrl = URL.createObjectURL(file);
-
-            document.querySelectorAll('.action-chip').forEach(c => c.classList.remove('selected'));
-            if(type === 'photo') document.getElementById('chipPhoto').classList.add('selected');
-            if(type === 'video') document.getElementById('chipVideo').classList.add('selected');
-            if(type === 'file') document.getElementById('chipFile').classList.add('selected');
-
-            alert(`✅ ${file.name} attached successfully! Click Post to share.`);
-        }
-
-        async function toggleLive() {
-            const btn = document.getElementById('liveToggleBtn');
-            const liveBox = document.getElementById('liveViewBox');
-            const videoElem = document.getElementById('liveVideoElement');
-
-            if (!isLiveActive) {
-                try {
-                    // Check if browser supports mediaDevices
-                    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                        alert("⚠️ Your browser does not support live camera streaming.");
-                        return;
-                    }
-
-                    mediaStreamObj = await navigator.mediaDevices.getUserMedia({ 
-                        video: { facingMode: "user" }, 
-                        audio: true 
-                    });
-                    
-                    videoElem.srcObject = mediaStreamObj;
-                    isLiveActive = true;
-                    btn.textContent = "⏹️ End Live";
-                    btn.classList.add('active');
-                    liveBox.style.display = 'block';
-                    alert('🔴 Live stream started successfully!');
-                } catch(err) {
-                    console.error("Camera error:", err);
-                    alert("⚠️ Error: Camera/Microphone access was blocked or denied. Please check your browser permissions.");
-                }
-            } else {
-                if (mediaStreamObj) {
-                    mediaStreamObj.getTracks().forEach(track => track.stop());
-                }
-                videoElem.srcObject = null;
-                isLiveActive = false;
-                btn.textContent = "🔴 Go Live";
-                btn.classList.remove('active');
-                liveBox.style.display = 'none';
-                alert('⏹️ Live stream ended.');
-            }
-        }
-
-        function toggleFollow(btn) {
-            if(!btn.classList.contains('following')) {
-                btn.textContent = 'Following';
-                btn.classList.add('following');
-            } else {
-                btn.textContent = 'Follow';
-                btn.classList.remove('following');
-            }
-        }
-
-        function likePost(elem) {
-            const countSpan = elem.querySelector('.like-count');
-            let currentLikes = parseInt(countSpan.textContent) || 0;
-            if(!elem.classList.contains('liked')) {
-                countSpan.textContent = currentLikes + 1;
-                elem.classList.add('liked');
-                elem.style.color = '#ff6b00';
-            } else {
-                countSpan.textContent = currentLikes - 1;
-                elem.classList.remove('liked');
-                elem.style.color = '#94a3b8';
-            }
-        }
-
-        function openCommentBox(elem) {
-            let feedCard = elem.closest('.feed-card');
-            let commentsSec = feedCard.querySelector('.comments-section');
+        // ፖስቶችን ከዳታቤዝ አምጥቶ ማሳየት
+        async function fetchPosts() {
+            const feed = document.getElementById('postsFeed');
             
-            let userComment = prompt("Write your comment here:");
-            if(userComment && userComment.trim() !== "") {
-                commentsSec.style.display = 'flex';
-                let commentDiv = document.createElement('div');
-                commentDiv.className = 'comment-item';
-                commentDiv.innerHTML = `<b>You:</b> ${userComment}`;
-                commentsSec.appendChild(commentDiv);
-            }
-        }
+            const { data, error } = await _supabase
+                .from('posts')
+                .select('*')
+                .order('created_at', { ascending: false });
 
-        function sharePost() {
-            alert("Post shared successfully!");
-        }
-
-        function submitPost() {
-            const val = document.getElementById('postInput').value.trim();
-            if(!val && !attachedMediaFile) {
-                alert('Please enter text or select a photo/video/file to post!');
+            if (error) {
+                console.error('Error fetching posts:', error);
+                feed.innerHTML = '<p style="text-align: center; color: red;">ፖስቶችን ማምጣት አልተቻለም።</p>';
                 return;
             }
-            
-            const feedContainer = document.getElementById('feedContainer');
-            const newPost = document.createElement('div');
-            newPost.className = 'feed-card';
-            
-            let mediaHtml = '';
-            if(attachedMediaType === 'photo' && attachedMediaUrl) {
-                mediaHtml = `<img src="${attachedMediaUrl}" class="feed-media-preview">`;
-            } else if(attachedMediaType === 'video' && attachedMediaUrl) {
-                mediaHtml = `<video src="${attachedMediaUrl}" controls class="feed-media-preview"></video>`;
-            } else if(attachedMediaType === 'file' && attachedMediaFile) {
-                mediaHtml = `<div style="font-size:0.75rem; color:#ff6b00;">📁 File: ${attachedMediaFile.name}</div>`;
+
+            if (data.length === 0) {
+                feed.innerHTML = '<p style="text-align: center; color: #777;">ምንም ፖስቶች የሉም። የመጀመሪያውን ፖስት ያድርጉ!</p>';
+                return;
             }
 
-            newPost.innerHTML = `
-                <div class="feed-user-info">
-                    <span class="feed-username">Melese Yimane (You)</span>
-                    <button class="follow-btn" onclick="toggleFollow(this)">Follow</button>
-                </div>
-                <div class="feed-text">${val}</div>
-                ${mediaHtml}
-                <div class="feed-interactions">
-                    <span class="interaction-action" onclick="likePost(this)">❤️ <span class="like-count">0</span> Likes</span>
-                    <span class="interaction-action" onclick="openCommentBox(this)">💬 Comment</span>
-                    <span class="interaction-action" onclick="sharePost()">🔄 Share</span>
-                </div>
-                <div class="comments-section" style="display:none;"></div>
-            `;
-            
-            feedContainer.prepend(newPost);
-            
-            alert('Your post has been published to LOOP Family!');
-            document.getElementById('postInput.value').value = ''; // fixed
-            document.getElementById('postInput').value = '';
-            attachedMediaFile = null;
-            attachedMediaType = "";
-            attachedMediaUrl = "";
-            document.querySelectorAll('.action-chip').forEach(c => c.classList.remove('selected'));
+            feed.innerHTML = '';
+            data.forEach(post => {
+                let mediaElement = '';
+                if (post.media_url) {
+                    if (post.media_type === 'video') {
+                        mediaElement = `<video src="${post.media_url}" controls></video>`;
+                    } else {
+                        mediaElement = `<img src="${post.media_url}" alt="Post Media">`;
+                    }
+                }
+
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <p>${escapeHtml(post.content || '')}</p>
+                    ${mediaElement}
+                    <div class="card-footer">
+                        <span>${new Date(post.created_at).toLocaleString()}</span>
+                        <button class="like-btn" onclick="likePost(${post.id}, ${post.likes || 0})">❤️ ውደድ (${post.likes || 0})</button>
+                    </div>
+                `;
+                feed.appendChild(card);
+            });
         }
+
+        // አዲስ ፖስት መፍጠር
+        async function createPost() {
+            const contentText = document.getElementById('postContent').value.trim();
+            const fileInput = document.getElementById('mediaFile');
+            const file = fileInput.files[0];
+
+            if (!contentText && !file) {
+                alert('እባክዎ ጽሁፍ ወይም ፎቶ/ቪዲዮ ያስገቡ!');
+                return;
+            }
+
+            let mediaUrl = null;
+            let mediaType = null;
+
+            // ፋይል ካለ ወደ Supabase Storage መጫን ይቻላል (ወይም ለጊዜው በባዶ መተው)
+            if (file) {
+                mediaType = file.type.startsWith('video') ? 'video' : 'image';
+                // (ማስታወሻ: ፋይል ለማስቀመጥ Storage Bucket መፍጠር ያስፈልጋል፣ ለአሁን በፅሁፍ እናስቀድም)
+            }
+
+            const { error } = await _supabase
+                .from('posts')
+                .insert([
+                    { 
+                        content: contentText, 
+                        media_url: mediaUrl, 
+                        media_type: mediaType,
+                        likes: 0 
+                    }
+                ]);
+
+            if (error) {
+                alert('ፖስት ማድረግ አልተቻለም: ' + error.message);
+                console.error(error);
+            } else {
+                document.getElementById('postContent').value = '';
+                fileInput.value = '';
+                fetchPosts();
+            }
+        }
+
+        // ላይክ መጨመር
+        async function likePost(postId, currentLikes) {
+            const { error } = await _supabase
+                .from('posts')
+                .update({ likes: currentLikes + 1 })
+                .eq('id', postId);
+
+            if (!error) {
+                fetchPosts();
+            }
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        // ገጹ ሲከፈት ፖስቶችን መጫን
+        fetchPosts();
     </script>
 </body>
 </html>
