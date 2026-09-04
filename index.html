@@ -1,333 +1,1091 @@
 <!DOCTYPE html>
 <html lang="am">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LOOP Super App</title>
-    <!-- Supabase CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        body {
-            background-color: #0b0f19;
-            color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            min-height: 100vh;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LOOP Super App</title>
 
-        /* የስፕላሽ ስክሪን ስታይል */
-        #splash-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #0b0f19;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease;
-        }
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-        .spinner-box {
-            width: 110px;
-            height: 110px;
-            border-radius: 50%;
-            border: 4px solid #1f2937;
-            border-top-color: #4ecca3;
-            animation: spin 1s linear infinite;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 15px rgba(78, 204, 163, 0.3);
-        }
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card: #111827;
+      --input: #1f2937;
+      --border: #374151;
+      --text: #ffffff;
+      --muted: #9ca3af;
+      --green: #4ecca3;
+      --blue: #3b82f6;
+      --red: #ef4444;
+      --yellow: #facc15;
+    }
 
-        .spinner-text-inner {
-            font-size: 14px;
-            font-weight: bold;
-            color: #4ecca3;
-            letter-spacing: 1px;
-        }
+    * {
+      box-sizing: border-box;
+    }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+    body {
+      min-height: 100vh;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family:
+        "Segoe UI",
+        "Noto Sans Ethiopic",
+        Arial,
+        sans-serif;
+    }
 
-        .loader-text {
-            margin-top: 20px;
-            font-size: 16px;
-            letter-spacing: 1px;
-            color: #4ecca3;
-            font-weight: bold;
-        }
+    #splash-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+      transition: opacity 0.35s ease;
+    }
 
-        /* ዋናው አፕሊኬሽን ማዕቀፍ */
-        #app-container {
-            width: 100%;
-            max-width: 500px;
-            padding: 20px;
-            box-sizing: border-box;
-            display: none;
-        }
+    .spinner-box {
+      display: flex;
+      width: 110px;
+      height: 110px;
+      align-items: center;
+      justify-content: center;
+      border: 4px solid #1f2937;
+      border-top-color: var(--green);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      box-shadow: 0 0 15px rgba(78, 204, 163, 0.3);
+    }
 
-        .card {
-            background: #111827;
-            border: 1px solid #1f2937;
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-        }
+    .spinner-text-inner {
+      color: var(--green);
+      font-size: 14px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      animation: reverseSpin 1s linear infinite;
+    }
 
-        input, textarea {
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0;
-            border-radius: 8px;
-            border: 1px solid #374151;
-            background: #1f2937;
-            color: white;
-            box-sizing: border-box;
-        }
+    .loader-text {
+      margin-top: 20px;
+      color: var(--green);
+      font-size: 15px;
+      font-weight: bold;
+      text-align: center;
+    }
 
-        button {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 8px;
-            transition: background 0.2s;
-        }
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
 
-        .btn-primary { background: #3b82f6; color: white; }
-        .btn-success { background: #10b981; color: white; }
-        .btn-danger { background: #ef4444; color: white; }
+    @keyframes reverseSpin {
+      to {
+        transform: rotate(-360deg);
+      }
+    }
 
-        .checkbox-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 10px 0;
-            font-size: 14px;
-            color: #9ca3af;
-        }
-        .checkbox-container input {
-            width: auto;
-            margin: 0;
-        }
-    </style>
+    #app-container {
+      display: none;
+      width: 100%;
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .app-title {
+      margin-bottom: 15px;
+      color: var(--green);
+      font-size: 26px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .connection-status {
+      min-height: 20px;
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .card {
+      margin-bottom: 16px;
+      padding: 18px;
+      background: var(--card);
+      border: 1px solid #1f2937;
+      border-radius: 14px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    }
+
+    h3 {
+      margin: 0 0 14px;
+      color: #60a5fa;
+      font-size: 18px;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      margin: 7px 0;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      outline: none;
+      background: var(--input);
+      color: var(--text);
+      font-size: 15px;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: var(--green);
+    }
+
+    input[type="file"] {
+      padding: 9px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 8px;
+      padding: 12px;
+      border: 0;
+      border-radius: 9px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+    }
+
+    .btn-primary:hover {
+      background: #2563eb;
+    }
+
+    .btn-success {
+      background: #10b981;
+    }
+
+    .btn-danger {
+      background: var(--red);
+    }
+
+    .auth-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 10px 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .checkbox-container input {
+      width: auto;
+      margin: 0;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .message {
+      min-height: 20px;
+      margin: 8px 0;
+      color: var(--green);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .message.error {
+      color: #f87171;
+    }
+
+    .user-email {
+      color: #34d399;
+      font-weight: bold;
+      overflow-wrap: anywhere;
+    }
+
+    .post-card {
+      margin-bottom: 14px;
+      padding: 15px;
+      background: var(--card);
+      border: 1px solid #1f2937;
+      border-radius: 14px;
+    }
+
+    .post-content {
+      margin-bottom: 10px;
+      color: #f8fafc;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+    }
+
+    .post-media {
+      display: block;
+      width: 100%;
+      max-height: 380px;
+      margin-top: 10px;
+      border-radius: 10px;
+      background: #020617;
+      object-fit: contain;
+    }
+
+    .post-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid #334155;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .like-button {
+      width: auto;
+      margin: 0;
+      padding: 7px 10px;
+      background: #1f2937;
+      border: 1px solid #475569;
+      font-size: 12px;
+    }
+
+    .empty {
+      padding: 22px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .error-text {
+      color: #f87171;
+    }
+
+    @media (max-width: 420px) {
+      #app-container {
+        padding: 10px;
+      }
+
+      .auth-buttons {
+        grid-template-columns: 1fr;
+      }
+
+      .post-footer {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
+
 <body>
-
-    <!-- የስፕላሽ ስክሪን -->
-    <div id="splash-screen">
-        <div class="spinner-box">
-            <span class="spinner-text-inner">LOOP</span>
-        </div>
-        <div class="loader-text">LOOP Super App በመጫን ላይ...</div>
+  <div id="splash-screen">
+    <div class="spinner-box">
+      <span class="spinner-text-inner">LOOP</span>
     </div>
 
-    <!-- ዋናው የአፕ ይዘት -->
-    <div id="app-container">
-        <!-- የሎግኢን ካርድ -->
-        <div id="auth-card" class="card">
-            <h3 style="margin-top: 0; color: #60a5fa;">🔐 LOOP ደህንነቱ የተጠበቀ መግቢያ</h3>
-            
-            <div id="auth-form">
-                <input type="email" id="auth-email" placeholder="ኢሜልዎን ያስገቡ" />
-                <input type="password" id="auth-password" placeholder="ሚስጥር ቁጥር (Password)" />
-                
-                <label class="checkbox-container">
-                    <input type="checkbox" id="remember-me" checked> ሎግኢን እንዳይጠይቅ አስታውሰኝ (Remember Me)
-                </label>
+    <div class="loader-text">
+      LOOP Super App በመጫን ላይ...
+    </div>
+  </div>
 
-                <button class="btn-primary" onclick="handleLogin()">ግባ (Sign In)</button>
-                <button class="btn-success" onclick="handleSignup()">አካውንት ክፈት (Sign Up)</button>
-            </div>
+  <div id="app-container">
+    <div class="app-title">👥 LOOP Super App</div>
 
-            <div id="user-info" style="display: none;">
-                <p>እንኳን ደህና መጡ: <span id="user-email-display" style="color: #34d399; font-weight: bold;"></span></p>
-                <button class="btn-danger" onclick="handleLogout()">ውጣ (Sign Out)</button>
-            </div>
-        </div>
-
-        <!-- የፖስት መስጫ ካርድ -->
-        <div class="card">
-            <h3 style="margin-top: 0; color: #60a5fa;">✍️ ፖስት አድርግ (LOOP Family)</h3>
-            <textarea id="post-content" rows="3" placeholder="ምን እየተሰማዎት ነው?"></textarea>
-            <input type="file" id="post-media-file" accept="image/*" />
-            <button class="btn-primary" onclick="submitPost()">ለቀው (ፖስት አድርግ)</button>
-        </div>
+    <div id="connection-status" class="connection-status">
+      Backend በመገናኘት ላይ...
     </div>
 
-    <script>
-        // Supabase ደህንነቱ የተጠበቀ አጠቃቀም (Safe Initialization)
-        let supabase = null;
-        try {
-            const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-            const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
-            if (window.supabase) {
-                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            }
-        } catch (e) {
-            console.error("Supabase ማገናኘት አልተቻለም:", e);
+    <section class="card">
+      <h3>🔐 የተጠቃሚ መግቢያ</h3>
+
+      <div id="auth-form">
+        <input
+          id="auth-email"
+          type="email"
+          placeholder="ኢሜልዎን ያስገቡ"
+          autocomplete="email"
+        />
+
+        <input
+          id="auth-password"
+          type="password"
+          placeholder="Password"
+          autocomplete="current-password"
+        />
+
+        <label class="checkbox-container">
+          <input id="remember-me" type="checkbox" checked />
+          አስታውሰኝ
+        </label>
+
+        <div class="auth-buttons">
+          <button
+            id="login-button"
+            class="btn-primary"
+            type="button"
+          >
+            ግባ
+          </button>
+
+          <button
+            id="signup-button"
+            class="btn-success"
+            type="button"
+          >
+            አካውንት ክፈት
+          </button>
+        </div>
+
+        <div id="auth-message" class="message"></div>
+      </div>
+
+      <div id="user-info" class="hidden">
+        <p>
+          እንኳን ደህና መጡ:
+          <span
+            id="user-email-display"
+            class="user-email"
+          ></span>
+        </p>
+
+        <button
+          id="logout-button"
+          class="btn-danger"
+          type="button"
+        >
+          ውጣ
+        </button>
+      </div>
+    </section>
+
+    <section id="composer-card" class="card hidden">
+      <h3>✍️ LOOP Family ፖስት</h3>
+
+      <textarea
+        id="post-content"
+        rows="4"
+        placeholder="ምን እየተሰማዎት ነው?"
+      ></textarea>
+
+      <input
+        id="post-media-file"
+        type="file"
+        accept="image/*,video/*"
+      />
+
+      <button
+        id="post-button"
+        class="btn-primary"
+        type="button"
+      >
+        ፖስት አድርግ
+      </button>
+
+      <div id="post-message" class="message"></div>
+    </section>
+
+    <section class="card">
+      <h3>📰 LOOP Family Feed</h3>
+
+      <div id="posts-container">
+        <div class="empty">
+          ፖስቶች በመጫን ላይ...
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const SUPABASE_URL =
+      'https://chmwdtxktrezasgbbvjr.supabase.co';
+
+    const SUPABASE_PUBLISHABLE_KEY =
+      'sb_publishable_QQAtpXYe2IQqmvpFrRyBXg_GWpnnQqc';
+
+    const supabaseClient =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY,
+        {
+          auth: {
+            persistSession: true,
+            autoRefreshToken: true,
+            detectSessionInUrl: true
+          }
+        }
+      );
+
+    const splashScreen =
+      document.getElementById('splash-screen');
+
+    const appContainer =
+      document.getElementById('app-container');
+
+    const authForm =
+      document.getElementById('auth-form');
+
+    const userInfo =
+      document.getElementById('user-info');
+
+    const composerCard =
+      document.getElementById('composer-card');
+
+    const authMessage =
+      document.getElementById('auth-message');
+
+    const postMessage =
+      document.getElementById('post-message');
+
+    const postsContainer =
+      document.getElementById('posts-container');
+
+    const connectionStatus =
+      document.getElementById('connection-status');
+
+    const userEmailDisplay =
+      document.getElementById('user-email-display');
+
+    const emailInput =
+      document.getElementById('auth-email');
+
+    const passwordInput =
+      document.getElementById('auth-password');
+
+    const rememberMe =
+      document.getElementById('remember-me');
+
+    const postContent =
+      document.getElementById('post-content');
+
+    const postMediaFile =
+      document.getElementById('post-media-file');
+
+    const loginButton =
+      document.getElementById('login-button');
+
+    const signupButton =
+      document.getElementById('signup-button');
+
+    const logoutButton =
+      document.getElementById('logout-button');
+
+    const postButton =
+      document.getElementById('post-button');
+
+    function setMessage(element, message, isError = false) {
+      element.textContent = message;
+      element.className = isError
+        ? 'message error'
+        : 'message';
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, char => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      }[char]));
+    }
+
+    function safeUrl(value) {
+      try {
+        const url = new URL(value);
+
+        if (url.protocol !== 'https:') {
+          return '';
         }
 
-        // ስፕላሽ ስክሪኑ በማንኛውም ሁኔታ ከ 2 ሰከንድ በኋላ በሰላም እንዲከፈት የተደረገ አስተማማኝ ትዕዛዝ
-        window.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                const splash = document.getElementById('splash-screen');
-                const app = document.getElementById('app-container');
-                
-                if (splash) {
-                    splash.style.opacity = '0';
-                    setTimeout(() => {
-                        splash.style.display = 'none';
-                        if (app) app.style.display = 'block';
-                        
-                        // getSession ደህንነቱን ጠብቆ ማስኬድ
-                        if (supabase) {
-                            checkExistingSession();
-                        }
-                    }, 500);
-                }
-            }, 2000);
+        return escapeHtml(url.href);
+      } catch {
+        return '';
+      }
+    }
+
+    function errorText(error) {
+      return error?.message || String(error);
+    }
+
+    function showUser(user) {
+      authForm.classList.add('hidden');
+      userInfo.classList.remove('hidden');
+      composerCard.classList.remove('hidden');
+
+      userEmailDisplay.textContent =
+        user.email || 'Authenticated user';
+    }
+
+    function showGuest() {
+      authForm.classList.remove('hidden');
+      userInfo.classList.add('hidden');
+      composerCard.classList.add('hidden');
+      userEmailDisplay.textContent = '';
+    }
+
+    async function checkSession() {
+      const {
+        data: { session },
+        error
+      } = await supabaseClient.auth.getSession();
+
+      if (error) {
+        console.error(error);
+        showGuest();
+        return;
+      }
+
+      if (session?.user) {
+        showUser(session.user);
+      } else {
+        showGuest();
+      }
+    }
+
+    async function handleLogin() {
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+
+      if (!email || !password) {
+        setMessage(
+          authMessage,
+          'ኢሜል እና password ይሙሉ።',
+          true
+        );
+        return;
+      }
+
+      loginButton.disabled = true;
+      setMessage(authMessage, 'በመግባት ላይ...');
+
+      const {
+        data,
+        error
+      } = await supabaseClient.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      loginButton.disabled = false;
+
+      if (error) {
+        setMessage(
+          authMessage,
+          'መግባት አልተቻለም: ' + errorText(error),
+          true
+        );
+        return;
+      }
+
+      if (rememberMe.checked) {
+        localStorage.setItem(
+          'loop_remembered_email',
+          data.user.email || email
+        );
+      } else {
+        localStorage.removeItem('loop_remembered_email');
+      }
+
+      setMessage(
+        authMessage,
+        '✅ በሰላም ገብተዋል።'
+      );
+
+      await checkSession();
+    }
+
+    async function handleSignup() {
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+
+      if (!email || !password) {
+        setMessage(
+          authMessage,
+          'ኢሜል እና password ይሙሉ።',
+          true
+        );
+        return;
+      }
+
+      if (password.length < 6) {
+        setMessage(
+          authMessage,
+          'Password ቢያንስ 6 ቁምፊ ይኑረው።',
+          true
+        );
+        return;
+      }
+
+      signupButton.disabled = true;
+      setMessage(
+        authMessage,
+        'አካውንት በመፍጠር ላይ...'
+      );
+
+      const {
+        data,
+        error
+      } = await supabaseClient.auth.signUp({
+        email,
+        password
+      });
+
+      signupButton.disabled = false;
+
+      if (error) {
+        setMessage(
+          authMessage,
+          'ምዝገባ አልተሳካም: ' + errorText(error),
+          true
+        );
+        return;
+      }
+
+      if (data.session && data.user) {
+        showUser(data.user);
+        setMessage(
+          authMessage,
+          '✅ አካውንቱ ተፈጥሯል።'
+        );
+      } else {
+        setMessage(
+          authMessage,
+          '✅ ምዝገባ ተሳክቷል። Email ያረጋግጡ።'
+        );
+      }
+    }
+
+    async function handleLogout() {
+      const { error } =
+        await supabaseClient.auth.signOut();
+
+      if (error) {
+        setMessage(
+          authMessage,
+          'መውጣት አልተቻለም: ' + errorText(error),
+          true
+        );
+        return;
+      }
+
+      showGuest();
+      setMessage(
+        authMessage,
+        'ከአካውንቱ ወጥተዋል።'
+      );
+    }
+
+    function renderMedia(post) {
+      if (!post.media_url) {
+        return '';
+      }
+
+      const url = safeUrl(post.media_url);
+
+      if (!url) {
+        return '';
+      }
+
+      if (
+        post.media_type === 'video' ||
+        post.media_type === 'live'
+      ) {
+        return `
+          <video
+            class="post-media"
+            src="${url}"
+            controls
+            preload="metadata"
+          ></video>
+        `;
+      }
+
+      return `
+        <img
+          class="post-media"
+          src="${url}"
+          alt="LOOP Family media"
+          loading="lazy"
+        />
+      `;
+    }
+
+    async function loadPosts() {
+      const {
+        data,
+        error
+      } = await supabaseClient
+        .from('posts')
+        .select(
+          'id, content, media_url, media_type, likes, created_at'
+        )
+        .order('created_at', {
+          ascending: false
         });
 
-        // የተጠቃሚውን ስሺን ማረጋገጥ (Remember Me Logic)
-        async function checkExistingSession() {
-            try {
-                const savedUser = localStorage.getItem('loop_user_session');
-                const { data: { session } } = await supabase.auth.getSession();
+      if (error) {
+        console.error('Posts error:', error);
 
-                if (session || savedUser) {
-                    const userEmail = session ? session.user.email : JSON.parse(savedUser).email;
-                    document.getElementById('auth-form').style.display = 'none';
-                    document.getElementById('user-info').style.display = 'block';
-                    document.getElementById('user-email-display').textContent = userEmail;
-                } else {
-                    document.getElementById('auth-form').style.display = 'block';
-                    document.getElementById('user-info').style.display = 'none';
-                }
-            } catch (err) {
-                console.error("Session check error:", err);
-            }
+        postsContainer.innerHTML = `
+          <div class="empty error-text">
+            ፖስቶችን ማምጣት አልተቻለም።<br>
+            ${escapeHtml(errorText(error))}
+          </div>
+        `;
+
+        return;
+      }
+
+      postsContainer.innerHTML = '';
+
+      if (!data || data.length === 0) {
+        postsContainer.innerHTML = `
+          <div class="empty">
+            ምንም ፖስት የለም።
+          </div>
+        `;
+        return;
+      }
+
+      data.forEach(post => {
+        const card =
+          document.createElement('article');
+
+        card.className = 'post-card';
+
+        card.innerHTML = `
+          <div class="post-content">
+            ${escapeHtml(post.content || '')}
+          </div>
+
+          ${renderMedia(post)}
+
+          <div class="post-footer">
+            <span>
+              ${new Date(post.created_at)
+                .toLocaleString('am-ET')}
+            </span>
+
+            <button
+              class="like-button"
+              type="button"
+              data-post-id="${post.id}"
+            >
+              ❤️ ${Number(post.likes || 0)}
+            </button>
+          </div>
+        `;
+
+        postsContainer.appendChild(card);
+      });
+
+      document
+        .querySelectorAll('.like-button')
+        .forEach(button => {
+          button.addEventListener('click', () => {
+            likePost(Number(button.dataset.postId));
+          });
+        });
+    }
+
+    async function uploadMedia(file) {
+      const cleanName = file.name
+        .replace(/[^a-zA-Z0-9._-]/g, '_');
+
+      const id =
+        crypto.randomUUID
+          ? crypto.randomUUID()
+          : Math.random().toString(36).slice(2);
+
+      const filePath =
+        `${Date.now()}_${id}_${cleanName}`;
+
+      const {
+        error
+      } = await supabaseClient.storage
+        .from('post-media')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false,
+          contentType: file.type
+        });
+
+      if (error) {
+        throw error;
+      }
+
+      const {
+        data
+      } = supabaseClient.storage
+        .from('post-media')
+        .getPublicUrl(filePath);
+
+      if (!data?.publicUrl) {
+        throw new Error(
+          'የpublic media URL አልተገኘም።'
+        );
+      }
+
+      return data.publicUrl;
+    }
+
+    async function submitPost() {
+      const {
+        data: { user }
+      } = await supabaseClient.auth.getUser();
+
+      if (!user) {
+        setMessage(
+          postMessage,
+          'መጀመሪያ Sign In ያድርጉ።',
+          true
+        );
+        return;
+      }
+
+      const content =
+        postContent.value.trim();
+
+      const file =
+        postMediaFile.files?.[0] || null;
+
+      if (!content && !file) {
+        setMessage(
+          postMessage,
+          'ጽሁፍ ወይም ፎቶ/ቪዲዮ ያስገቡ።',
+          true
+        );
+        return;
+      }
+
+      if (file && file.size > 20 * 1024 * 1024) {
+        setMessage(
+          postMessage,
+          'ፋይሉ ከ20MB መብለጥ የለበትም።',
+          true
+        );
+        return;
+      }
+
+      postButton.disabled = true;
+      postButton.textContent = 'በመላክ ላይ...';
+      setMessage(postMessage, 'በመላክ ላይ...');
+
+      try {
+        let mediaUrl = null;
+        let mediaType = null;
+
+        if (file) {
+          mediaUrl = await uploadMedia(file);
+
+          mediaType =
+            file.type.startsWith('video/')
+              ? 'video'
+              : 'image';
         }
 
-        // ሎግኢን ማድረግ
-        async function handleLogin() {
-            if (!supabase) { alert("ሲስተሙ አልተገናኘም!"); return; }
-            const email = document.getElementById('auth-email').value;
-            const password = document.getElementById('auth-password').value;
-            const rememberMe = document.getElementById('remember-me').checked;
+        const {
+          error
+        } = await supabaseClient
+          .from('posts')
+          .insert({
+            content,
+            media_url: mediaUrl,
+            media_type: mediaType,
+            likes: 0,
+            user_id: user.id
+          });
 
-            if (!email || !password) {
-                alert("እባክዎ ኢሜል እና ፓስወርድ ይሙሉ!");
-                return;
-            }
-
-            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-            if (error) {
-                alert("መግባት አልተቻለም: " + error.message);
-            } else {
-                alert("በሰላም ገብተዋል!");
-                if (rememberMe) {
-                    localStorage.setItem('loop_user_session', JSON.stringify({ id: data.user.id, email: data.user.email }));
-                }
-                location.reload();
-            }
+        if (error) {
+          throw error;
         }
 
-        // አካውንት መክፈት (Sign Up)
-        async function handleSignup() {
-            if (!supabase) { alert("ሲስተሙ አልተገናኘም!"); return; }
-            const email = document.getElementById('auth-email').value;
-            const password = document.getElementById('auth-password').value;
+        postContent.value = '';
+        postMediaFile.value = '';
 
-            if (!email || !password) {
-                alert("እባክዎ ኢሜል እና ፓስወርድ ይሙሉ!");
-                return;
-            }
+        setMessage(
+          postMessage,
+          '✅ ፖስቱ ተልኳል።'
+        );
 
-            const { data, error } = await supabase.auth.signUp({ email, password });
-            if (error) {
-                alert("ምዝገባ አልተሳካም: " + error.message);
-            } else {
-                alert("ምዝገባው ተሳክቷል! አሁን መግባት (Sign In) ይችላሉ።");
-            }
-        }
+        await loadPosts();
 
-        // ከሲስተሙ መውጣት (Sign Out)
-        async function handleLogout() {
-            if (supabase) await supabase.auth.signOut();
-            localStorage.removeItem('loop_user_session');
-            alert("ወጥተዋል!");
-            location.reload();
-        }
+      } catch (error) {
+        console.error('Submit error:', error);
 
-        // ፖስት ማድረግ (Strict RLS)
-        async function submitPost() {
-            if (!supabase) { alert("ሲስተሙ አልተገናኘም!"); return; }
-            const { data: { user } } = await supabase.auth.getUser();
-            const savedUser = localStorage.getItem('loop_user_session');
+        setMessage(
+          postMessage,
+          'ፖስት መላክ አልተቻለም: ' +
+          errorText(error),
+          true
+        );
+      } finally {
+        postButton.disabled = false;
+        postButton.textContent = 'ፖስት አድርግ';
+      }
+    }
 
-            if (!user && !savedUser) {
-                alert("እባክዎ መጀመሪያ ከላይ በአካውንት ይግቡ (Sign In)!");
-                return;
-            }
+    async function likePost(postId) {
+      const {
+        data: post,
+        error: readError
+      } = await supabaseClient
+        .from('posts')
+        .select('likes')
+        .eq('id', postId)
+        .single();
 
-            const content = document.getElementById('post-content').value;
-            const fileInput = document.getElementById('post-media-file').files[0];
+      if (readError) {
+        console.error(readError);
+        return;
+      }
 
-            if (!content && !fileInput) {
-                alert("እባክዎ ጽሁፍ ወይም ፎቶ ያስገቡ!");
-                return;
-            }
+      const {
+        error
+      } = await supabaseClient
+        .from('posts')
+        .update({
+          likes: Number(post.likes || 0) + 1
+        })
+        .eq('id', postId);
 
-            let mediaUrl = null;
+      if (error) {
+        console.error(error);
+        return;
+      }
 
-            if (fileInput) {
-                const fileName = `${Date.now()}_${fileInput.name}`;
-                const { data: uploadData, error: uploadError } = await supabase.storage
-                    .from('post-media')
-                    .upload(fileName, fileInput);
+      await loadPosts();
+    }
 
-                if (uploadError) {
-                    alert("ፋይል መጫን አልተቻለም: " + uploadError.message);
-                    return;
-                }
+    function setupRealtime() {
+      const channel = supabaseClient
+        .channel('loop-family-posts')
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'posts'
+          },
+          payload => {
+            console.log('Realtime:', payload);
+            loadPosts();
+          }
+        )
+        .subscribe(status => {
+          if (status === 'SUBSCRIBED') {
+            connectionStatus.textContent =
+              '✅ Realtime ተገናኝቷል።';
+            connectionStatus.style.color =
+              '#4ade80';
+          }
 
-                const { data: publicUrlData } = supabase.storage
-                    .from('post-media')
-                    .getPublicUrl(fileName);
-                
-                mediaUrl = publicUrlData.publicUrl;
-            }
+          if (status === 'CHANNEL_ERROR') {
+            connectionStatus.textContent =
+              '❌ Realtime ስህተት።';
+            connectionStatus.style.color =
+              '#f87171';
+          }
 
-            const userId = user ? user.id : JSON.parse(savedUser).id;
+          if (status === 'TIMED_OUT') {
+            connectionStatus.textContent =
+              '⚠️ Realtime timeout።';
+            connectionStatus.style.color =
+              '#facc15';
+          }
+        });
 
-            const { error: postError } = await supabase
-                .from('posts')
-                .insert([{ content: content, media_url: mediaUrl, user_id: userId }]);
+      window.addEventListener('beforeunload', () => {
+        supabaseClient.removeChannel(channel);
+      });
+    }
 
-            if (postError) {
-                alert("ፖስት ማድረግ አልተቻለም: " + postError.message);
-            } else {
-                alert("በተሳካ ሁኔታ ተለጠፈ!");
-                document.getElementById('post-content').value = '';
-                document.getElementById('post-media-file').value = '';
-            }
-        }
-    </script>
+    async function initialize() {
+      try {
+        await checkSession();
+        await loadPosts();
+        setupRealtime();
+
+        appContainer.style.display = 'block';
+        splashScreen.style.opacity = '0';
+
+        setTimeout(() => {
+          splashScreen.style.display = 'none';
+        }, 350);
+
+      } catch (error) {
+        console.error('Initialize error:', error);
+
+        splashScreen.innerHTML = `
+          <div style="
+            max-width: 340px;
+            padding: 20px;
+            color: #f87171;
+            text-align: center;
+          ">
+            LOOP መክፈት አልተቻለም።<br><br>
+            ${escapeHtml(errorText(error))}
+          </div>
+        `;
+      }
+    }
+
+    loginButton.addEventListener(
+      'click',
+      handleLogin
+    );
+
+    signupButton.addEventListener(
+      'click',
+      handleSignup
+    );
+
+    logoutButton.addEventListener(
+      'click',
+      handleLogout
+    );
+
+    postButton.addEventListener(
+      'click',
+      submitPost
+    );
+
+    const savedEmail =
+      localStorage.getItem('loop_remembered_email');
+
+    if (savedEmail) {
+      emailInput.value = savedEmail;
+    }
+
+    initialize();
+  </script>
 </body>
 </html>
