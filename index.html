@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="am">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,7 +30,6 @@
             gap: 16px;
         }
 
-        /* Header */
         header {
             text-align: center;
             padding: 10px 0;
@@ -49,7 +48,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* Grid Services Dashboard */
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -86,7 +84,6 @@
             color: #ffffff;
         }
 
-        /* LOOP Family Social Section */
         .social-box {
             background-color: #111827;
             border: 1px solid #1f293d;
@@ -184,7 +181,6 @@
             cursor: pointer;
         }
 
-        /* Feed Display Area */
         .feed-container {
             display: flex;
             flex-direction: column;
@@ -239,14 +235,6 @@
             line-height: 1.4;
         }
 
-        .media-preview {
-            width: 100%;
-            max-height: 180px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-top: 4px;
-        }
-
         .feed-interactions {
             display: flex;
             justify-content: space-between;
@@ -284,7 +272,6 @@
             border-radius: 6px;
         }
 
-        /* Live Stream Box inside App */
         .live-view-box {
             display: none;
             background: #161b22;
@@ -320,7 +307,6 @@
             border-radius: 4px;
         }
 
-        /* Modal popup */
         .modal {
             display: none;
             position: fixed;
@@ -358,78 +344,73 @@
 <body>
 
     <div class="container">
-        <!-- Header -->
         <header>
             <h1>LOOP Super App</h1>
             <p>Connect • Discover • Communicate • Pay</p>
         </header>
 
-        <!-- Services Grid Dashboard -->
         <div class="dashboard-grid">
-            <div class="service-card" onclick="openModule('LOOP ቱሪዝም (Tourism & Booking)', 'ኢትዮጵያ ውስጥ የሚገኙ አስደናቂ መስህቦች፣ ሆቴሎች እና የትራንስፖርት ቡኪንግ ስርዓት።')">
+            <div class="service-card" onclick="openModule('LOOP Tourism', 'Explore amazing tourist destinations, hotels and transport booking systems across Ethiopia.')">
                 <div class="icon">✈️</div>
-                <span>LOOP ቱሪዝም</span>
+                <span>Tourism</span>
             </div>
-            <div class="service-card" onclick="openModule('LOOP ስፖርት (Live Match & Scores)', 'የእግር ኳስ ላይቭ ጨዋታዎች እና ውጤቶች።')">
+            <div class="service-card" onclick="openModule('LOOP Sports', 'Live match updates, scores, and league standings.')">
                 <div class="icon">⚽</div>
-                <span>ስፖርት</span>
+                <span>Sports</span>
             </div>
-            <div class="service-card" onclick="openModule('LOOP ቻት (AI Translation & Chat)', 'የኢሞ እና ዋትስአፕ ባህሪያት የተሟሉበት የውይይት ማዕቀፍ።')">
+            <div class="service-card" onclick="openModule('LOOP Chat', 'Global chat framework equipped with instant messaging and AI translation.')">
                 <div class="icon">💬</div>
-                <span>ቻት</span>
+                <span>Chat</span>
             </div>
-            <div class="service-card" onclick="openModule('LOOP AI ረዳት (Smart Assistant)', 'ለማንኛውም ፍላጎትዎ ፈጣን ምላሽ የሚሰጥ ስማርት ረዳት።')">
+            <div class="service-card" onclick="openModule('LOOP AI Assistant', 'Your smart assistant ready to help with any request instantly.')">
                 <div class="icon">🤖</div>
-                <span>AI ረዳት</span>
+                <span>AI Assistant</span>
             </div>
-            <div class="service-card" onclick="openModule('LOOP ዜና (Multi-sector News)', 'ወቅታዊ ሀገራዊ እና ዓለም አቀፋዊ ዜናዎች።')">
+            <div class="service-card" onclick="openModule('LOOP News', 'Latest multi-sector national and international news.')">
                 <div class="icon">📖</div>
-                <span>ዜና</span>
+                <span>News</span>
             </div>
-            <div class="service-card" onclick="openModule('LOOP አየር ሁኔታ (Weather)', 'የተለያዩ ከተሞች የአየር ሁኔታ ትንበያ።')">
+            <div class="service-card" onclick="openModule('LOOP Weather', 'Accurate weather forecasts for various cities.')">
                 <div class="icon">🌤️</div>
-                <span>አየር ሁኔታ</span>
+                <span>Weather</span>
             </div>
         </div>
 
-        <!-- LOOP Family Real Social Section -->
         <div class="social-box">
             <div class="social-header">
                 <span>👥 LOOP Family</span>
-                <button class="live-btn" id="liveToggleBtn" onclick="toggleLive()">🔴 LIVE ገብ</button>
+                <button class="live-btn" id="liveToggleBtn" onclick="toggleLive()">🔴 Go Live</button>
             </div>
 
-            <!-- Active Live View Simulator -->
             <div class="live-view-box" id="liveViewBox">
                 <div class="live-video-sim">
                     <span class="live-badge-on">● LIVE ON AIR</span>
-                    🎥 የቀጥታ ስርጭትዎ በስርጭት ላይ ነው...
+                    🎥 Your Live Stream is broadcasting...
                 </div>
-                <p style="font-size: 0.75rem; color: #94a3b8; margin-top: 6px;">ተከታዮችዎ እየተመለከቱዎት እና አስተያየት እየሰጡ ነው!</p>
+                <p style="font-size: 0.75rem; color: #94a3b8; margin-top: 6px;">Your followers are watching and commenting!</p>
             </div>
             
-            <textarea class="post-textarea" id="postInput" placeholder="ምን እየተሰማዎት ነው? (ጽሁፍ፣ ፎቶ፣ ቪዲዮ ወይም ፋይል ያጋሩ...)"></textarea>
+            <textarea class="post-textarea" id="postInput" placeholder="What's on your mind? Share text, photo, video or file..."></textarea>
             
             <div class="post-actions-row">
-                <div class="action-chip" id="chipPhoto" onclick="selectMedia('📷 ፎቶ')">📷 ፎቶ</div>
-                <div class="action-chip" id="chipVideo" onclick="selectMedia('🎥 ቪዲዮ')">🎥 ቪዲዮ</div>
-                <div class="action-chip" id="chipFile" onclick="selectMedia('📁 ፋይል')">📁 ፋይል</div>
+                <div class="action-chip" id="chipPhoto" onclick="selectMedia('📷 Photo')">📷 Photo</div>
+                <div class="action-chip" id="chipVideo" onclick="selectMedia('🎥 Video')">🎥 Video</div>
+                <div class="action-chip" id="chipFile" onclick="selectMedia('📁 File')">📁 File</div>
             </div>
 
-            <button class="submit-post-btn" onclick="submitPost()">ፖስት አድርግ (Post)</button>
+            <button class="submit-post-btn" onclick="submitPost()">Post</button>
 
-            <!-- Live Feed Container -->
             <div class="feed-container" id="feedContainer">
-                <div class="feed-card" id="defaultPost">
+                <div class="feed-card">
                     <div class="feed-user-info">
-                        <span class="feed-username">መለሰ ይማነ (Developer)</span>
-                        <button class="follow-btn" onclick="toggleFollow(this)">ተከተል (Follow)</button>
+                        <span class="feed-username">Melese Yimane (Developer)</span>
+                        <button class="follow-btn" onclick="toggleFollow(this)">Follow</button>
                     </div>
-                    <div class="feed-text">እንኳን ወደ LOOP Family በደህና መጡ! 🚀 አሁን ፖስት ማድረግ፣ ላይክ መስጠት፣ ኮሜንት መጻፍ እና ላይቭ መግባት ይችላሉ።</div>
+                    <div class="feed-text">Welcome to LOOP Family! 🚀 You can now post updates, like, comment, and go live seamlessly.</div>
                     <div class="feed-interactions">
-                        <span class="interaction-action" onclick="likePost(this)">❤️ <span class="like-count">15</span> ላይክ</span>
-                        <span class="interaction-action" onclick="openCommentBox(this)">💬 አስተያየት</span>
-                        <span class="interaction-action" onclick="sharePost()">🔄 ሼር</span>
+                        <span class="interaction-action" onclick="likePost(this)">❤️ <span class="like-count">15</span> Likes</span>
+                        <span class="interaction-action" onclick="openCommentBox(this)">💬 Comment</span>
+                        <span class="interaction-action" onclick="sharePost()">🔄 Share</span>
                     </div>
                     <div class="comments-section" style="display:none;"></div>
                 </div>
@@ -437,15 +418,14 @@
         </div>
     </div>
 
-    <!-- Module Popup View -->
     <div class="modal" id="moduleModal">
         <div class="modal-content">
             <div class="modal-header">
-                <span id="modalTitle">ማዕቀፍ</span>
+                <span id="modalTitle">Module</span>
                 <button class="close-btn" onclick="closeModule()">✕</button>
             </div>
             <p id="modalDesc" style="color: #94a3b8; font-size: 0.88rem; line-height: 1.5;"></p>
-            <button class="submit-post-btn" onclick="closeModule()">ተመለስ</button>
+            <button class="submit-post-btn" onclick="closeModule()">Back</button>
         </div>
     </div>
 
@@ -465,10 +445,10 @@
         function selectMedia(type) {
             selectedMediaType = type;
             document.querySelectorAll('.action-chip').forEach(c => c.classList.remove('selected'));
-            if(type.includes('ፎቶ')) document.getElementById('chipPhoto').classList.add('selected');
-            if(type.includes('ቪዲዮ')) document.getElementById('chipVideo').classList.add('selected');
-            if(type.includes('ፋይል')) document.getElementById('chipFile').classList.add('selected');
-            alert(`${type} ተመርጧል። አሁን 'ፖስት አድርግ' የሚለውን ይጫኑ።`);
+            if(type.includes('Photo')) document.getElementById('chipPhoto').classList.add('selected');
+            if(type.includes('Video')) document.getElementById('chipVideo').classList.add('selected');
+            if(type.includes('File')) document.getElementById('chipFile').classList.add('selected');
+            alert(`${type} attached successfully. Now click Post.`);
         }
 
         function toggleLive() {
@@ -477,24 +457,24 @@
             isLiveActive = !isLiveActive;
 
             if(isLiveActive) {
-                btn.textContent = "⏹️ LIVE ጨርስ";
+                btn.textContent = "⏹️ End Live";
                 btn.classList.add('active');
                 liveBox.style.display = 'block';
-                alert('🔴 የቀጥታ ስርጭት (LIVE) ተጀምሯል! ተከታዮችዎ ማሳወቂያ ደርሷቸዋል።');
+                alert('🔴 Live stream started! Followers have been notified.');
             } else {
-                btn.textContent = "🔴 LIVE ገብ";
+                btn.textContent = "🔴 Go Live";
                 btn.classList.remove('active');
                 liveBox.style.display = 'none';
-                alert('⏹️ የቀጥታ ስርጭቱ ተጠናቋል።');
+                alert('⏹️ Live stream ended.');
             }
         }
 
         function toggleFollow(btn) {
             if(!btn.classList.contains('following')) {
-                btn.textContent = 'ይከተላሉ (Following)';
+                btn.textContent = 'Following';
                 btn.classList.add('following');
             } else {
-                btn.textContent = 'ተከተል (Follow)';
+                btn.textContent = 'Follow';
                 btn.classList.remove('following');
             }
         }
@@ -517,24 +497,24 @@
             let feedCard = elem.closest('.feed-card');
             let commentsSec = feedCard.querySelector('.comments-section');
             
-            let userComment = prompt("አስተያየትዎን (Comment) እዚህ ይጻፉ:");
+            let userComment = prompt("Write your comment here:");
             if(userComment && userComment.trim() !== "") {
                 commentsSec.style.display = 'flex';
                 let commentDiv = document.createElement('div');
                 commentDiv.className = 'comment-item';
-                commentDiv.innerHTML = `<b>እርስዎ:</b> ${userComment}`;
+                commentDiv.innerHTML = `<b>You:</b> ${userComment}`;
                 commentsSec.appendChild(commentDiv);
             }
         }
 
         function sharePost() {
-            alert("ፖስቱ በተሳካ ሁኔታ ተጋርቷል (Shared)! ሌሎች ሰዎችን መጋበዝ ይችላሉ።");
+            alert("Post shared successfully!");
         }
 
         function submitPost() {
             const val = document.getElementById('postInput').value.trim();
             if(!val && !selectedMediaType) {
-                alert('እባክዎ የሚለቁትን ጽሁፍ ወይም ፋይል ይምረጡ!');
+                alert('Please enter text or select a file to post!');
                 return;
             }
             
@@ -542,25 +522,25 @@
             const newPost = document.createElement('div');
             newPost.className = 'feed-card';
             
-            let mediaText = selectedMediaType ? `<br><small style="color:#ff6b00;">📎 [የተያያዘ: ${selectedMediaType}]</small>` : '';
+            let mediaText = selectedMediaType ? `<br><small style="color:#ff6b00;">📎 [Attached: ${selectedMediaType}]</small>` : '';
 
             newPost.innerHTML = `
                 <div class="feed-user-info">
-                    <span class="feed-username">መለሰ ይማነ (እርስዎ)</span>
-                    <button class="follow-btn" onclick="toggleFollow(this)">ተከተል (Follow)</button>
+                    <span class="feed-username">Melese Yimane (You)</span>
+                    <button class="follow-btn" onclick="toggleFollow(this)">Follow</button>
                 </div>
                 <div class="feed-text">${val} ${mediaText}</div>
                 <div class="feed-interactions">
-                    <span class="interaction-action" onclick="likePost(this)">❤️ <span class="like-count">0</span> ላይክ</span>
-                    <span class="interaction-action" onclick="openCommentBox(this)">💬 አስተያየት</span>
-                    <span class="interaction-action" onclick="sharePost()">🔄 ሼር</span>
+                    <span class="interaction-action" onclick="likePost(this)">❤️ <span class="like-count">0</span> Likes</span>
+                    <span class="interaction-action" onclick="openCommentBox(this)">💬 Comment</span>
+                    <span class="interaction-action" onclick="sharePost()">🔄 Share</span>
                 </div>
                 <div class="comments-section" style="display:none;"></div>
             `;
             
             feedContainer.prepend(newPost);
             
-            alert('ፖስትዎ በ LOOP Family ተሳክቷል!');
+            alert('Your post has been published to LOOP Family!');
             document.getElementById('postInput').value = '';
             selectedMediaType = "";
             document.querySelectorAll('.action-chip').forEach(c => c.classList.remove('selected'));
