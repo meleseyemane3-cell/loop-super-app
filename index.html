@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOOP Super App</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f7f5f0; margin: 0; padding: 20px; color: #333; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .logo { font-size: 24px; font-weight: bold; color: #ff5722; }
+        .welcome { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .card { background: #1e293b; color: white; padding: 20px; border-radius: 12px; text-decoration: none; }
+        .card.yellow { background: #f59e0b; }
+        .card.orange { background: #ea580c; }
+        .card.blue { background: #3b82f6; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">LOOP.</div>
+        <div><strong>MA</strong></div>
+    </div>
+    <div class="welcome">
+        <h2>Good morning, Meles.</h2>
+        <p>Here's the good stuff, lined up.</p>
+    </div>
+    <div class="grid">
+        <a href="#" class="card">
+            <h3>LOOP Tourism</h3>
+            <p>Find places</p>
+        </a>
+        <a href="#" class="card yellow">
+            <h3>Sport</h3>
+            <p>Latest scores</p>
+        </a>
+        <a href="#" class="card orange">
+            <h3>Chat</h3>
+            <p>Stay close</p>
+        </a>
+        <a href="#" class="card blue">
+            <h3>AI Assistant</h3>
+            <p>Ask anything</p>
+        </a>
+    </div>
+</body>
+</html>
