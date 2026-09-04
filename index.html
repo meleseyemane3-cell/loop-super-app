@@ -1,47 +1,301 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="am">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LOOP Super App</title>
     <style>
-        body { font-family: sans-serif; background-color: #f7f5f0; margin: 0; padding: 20px; color: #333; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .logo { font-size: 24px; font-weight: bold; color: #ff5722; }
-        .welcome { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-        .card { background: #1e293b; color: white; padding: 20px; border-radius: 12px; text-decoration: none; }
-        .card.yellow { background: #f59e0b; }
-        .card.orange { background: #ea580c; }
-        .card.blue { background: #3b82f6; }
+        :root {
+            --bg-color: #0b0f19;
+            --surface-color: #131b2e;
+            --surface-card: #1a233a;
+            --primary-orange: #ff6b00;
+            --primary-blue: #0066ff;
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --border-color: #2a3650;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 15px 0;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            color: var(--text-main);
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        header p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        /* Grid Services Dashboard */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .service-card {
+            background-color: var(--surface-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 15px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+
+        .service-card:hover {
+            border-color: var(--primary-orange);
+            transform: translateY(-2px);
+            background-color: #212c47;
+        }
+
+        .service-card .icon {
+            font-size: 1.6rem;
+        }
+
+        .service-card span {
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        /* LOOP Family / Social Section */
+        .social-box {
+            background-color: var(--surface-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .social-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--primary-orange);
+        }
+
+        .post-textarea {
+            width: 100%;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            resize: none;
+            height: 90px;
+            outline: none;
+        }
+
+        .post-textarea:focus {
+            border-color: var(--primary-orange);
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            flex: 1;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .action-btn:hover {
+            background-color: #212c47;
+            color: var(--text-main);
+        }
+
+        .submit-post-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary-orange), #ff8533);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .submit-post-btn:hover {
+            opacity: 0.95;
+        }
+
+        /* Modal popup for modules */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: var(--surface-card);
+            border: 1px solid var(--border-color);
+            width: 100%;
+            max-width: 420px;
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .close-btn {
+            background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer;
+        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="logo">LOOP.</div>
-        <div><strong>MA</strong></div>
+
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>LOOP Super App</h1>
+            <p>Connect • Discover • Communicate • Pay</p>
+        </header>
+
+        <!-- Services Grid Dashboard -->
+        <div class="dashboard-grid">
+            <div class="service-card" onclick="openModule('LOOP ቱሪዝም (Tourism & Booking)')">
+                <div class="icon">✈️</div>
+                <span>LOOP ቱሪዝም</span>
+            </div>
+            <div class="service-card" onclick="openModule('LOOP ስፖርት (Live Match & Scores)')">
+                <div class="icon">⚽</div>
+                <span>ስፖርት</span>
+            </div>
+            <div class="service-card" onclick="openModule('LOOP ቻት (AI Translation & Chat)')">
+                <div class="icon">💬</div>
+                <span>ቻት</span>
+            </div>
+            <div class="service-card" onclick="openModule('LOOP AI ረዳት (Smart Assistant)')">
+                <div class="icon">🤖</div>
+                <span>AI ረዳት</span>
+            </div>
+            <div class="service-card" onclick="openModule('LOOP ዜና (Multi-sector News)')">
+                <div class="icon">📖</div>
+                <span>ዜና</span>
+            </div>
+            <div class="service-card" onclick="openModule('LOOP አየር ሁኔታ (Weather)')">
+                <div class="icon">🌤️</div>
+                <span>አየር ሁኔታ</span>
+            </div>
+        </div>
+
+        <!-- LOOP Family Social Section -->
+        <div class="social-box">
+            <div class="social-header">
+                👥 LOOP Family
+            </div>
+            <textarea class="post-textarea" id="postInput" placeholder="ምን እየተሰማዎት ነው? (Share with community...)"></textarea>
+            <div class="post-actions">
+                <button class="action-btn" onclick="alert('ፎቶ/ቪዲዮ መጫኛ ክፍት ተደርጓል!')">📷 ፎቶ/ቪዲዮ</button>
+                <button class="action-btn" onclick="alert('የድምጽ መልእክት መቅረጫ ተከፍቷል!')">🎙️ ድምጽ</button>
+            </div>
+            <button class="submit-post-btn" onclick="submitPost()">ለቀቅ (Post)</button>
+        </div>
     </div>
-    <div class="welcome">
-        <h2>Good morning, Meles.</h2>
-        <p>Here's the good stuff, lined up.</p>
+
+    <!-- Module Popup View -->
+    <div class="modal" id="moduleModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span id="modalTitle">ማዕቀፍ</span>
+                <button class="close-btn" onclick="closeModule()">✕</button>
+            </div>
+            <p id="modalDesc" style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5;">ይህ አገልግሎት ሙሉ በሙሉ በሂደት ላይ ያለ ሲሆን ቀጣይነት ባለው መልኩ የየራሱን የተሟላ ገጽ እና ግብይት ይይዛል።</p>
+            <button class="submit-post-btn" onclick="closeModule()">ተመለስ</button>
+        </div>
     </div>
-    <div class="grid">
-        <a href="#" class="card">
-            <h3>LOOP Tourism</h3>
-            <p>Find places</p>
-        </a>
-        <a href="#" class="card yellow">
-            <h3>Sport</h3>
-            <p>Latest scores</p>
-        </a>
-        <a href="#" class="card orange">
-            <h3>Chat</h3>
-            <p>Stay close</p>
-        </a>
-        <a href="#" class="card blue">
-            <h3>AI Assistant</h3>
-            <p>Ask anything</p>
-        </a>
-    </div>
+
+    <script>
+        function openModule(moduleName) {
+            document.getElementById('modalTitle').textContent = moduleName;
+            document.getElementById('moduleModal').style.display = 'flex';
+        }
+
+        function closeModule() {
+            document.getElementById('moduleModal').style.display = 'none';
+        }
+
+        function submitPost() {
+            const val = document.getElementById('postInput').value.trim();
+            if(val === '') {
+                alert('እባክዎ የሚለቁትን ሀሳብ ይጻፉ!');
+                return;
+            }
+            alert('ሀሳብዎ በ LOOP Family ተሳክቷል!');
+            document.getElementById('postInput').value = '';
+        }
+    </script>
 </body>
 </html>
