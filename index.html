@@ -159,6 +159,10 @@
             align-items: center;
             gap: 5px;
         }
+        .action-chip:hover {
+            border-color: #38bdf8;
+            color: #38bdf8;
+        }
         .submit-post-btn {
             width: 100%;
             background: #0284c7;
@@ -189,7 +193,7 @@
             color: #f8fafc;
             line-height: 1.5;
         }
-        .card img, .card video {
+        .card img, .card video, .card audio {
             width: 100%;
             border-radius: 8px;
             max-height: 300px;
@@ -220,6 +224,12 @@
             background: #38bdf8;
             color: #0f172a;
         }
+        #recordingStatus {
+            font-size: 12px;
+            color: #f43f5e;
+            margin-bottom: 8px;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -230,24 +240,12 @@
         <div class="content">
             <!-- Features Grid -->
             <div class="features-grid">
-                <button class="feature-btn" onclick="alert('ጉዞ (Travel) feature coming soon!')">
-                    <span>✈️</span> ጉዞ
-                </button>
-                <button class="feature-btn" onclick="alert('ስፖርት (Sports) feature coming soon!')">
-                    <span>⚽</span> ስፖርት
-                </button>
-                <button class="feature-btn" onclick="alert('ቻት (Chat) feature coming soon!')">
-                    <span>💬</span> ቻት
-                </button>
-                <button class="feature-btn" onclick="alert('AI ረዳት (AI Assistant) feature coming soon!')">
-                    <span>🤖</span> AI ረዳት
-                </button>
-                <button class="feature-btn" onclick="alert('ዜና (News) feature coming soon!')">
-                    <span>📖</span> ዜና
-                </button>
-                <button class="feature-btn" onclick="alert('ዋሌት (Wallet) feature coming soon!')">
-                    <span>💰</span> ዋሌት
-                </button>
+                <button class="feature-btn" onclick="alert('ጉዞ (Travel) feature coming soon!')"><span>✈️</span> ጉዞ</button>
+                <button class="feature-btn" onclick="alert('ስፖርት (Sports) feature coming soon!')"><span>⚽</span> ስፖርት</button>
+                <button class="feature-btn" onclick="alert('ቻት (Chat) feature coming soon!')"><span>💬</span> ቻት</button>
+                <button class="feature-btn" onclick="alert('AI ረዳት (AI Assistant) feature coming soon!')"><span>🤖</span> AI ረዳት</button>
+                <button class="feature-btn" onclick="alert('ዜና (News) feature coming soon!')"><span>📖</span> ዜና</button>
+                <button class="feature-btn" onclick="alert('ዋሌት (Wallet) feature coming soon!')"><span>💰</span> ዋሌት</button>
             </div>
 
             <!-- Wallet/Account Bar -->
@@ -261,15 +259,17 @@
             <div class="post-box">
                 <div class="post-box-title">👥 LOOP Family</div>
                 <textarea id="postContent" rows="3" placeholder="ምን እየተሰማዎት ነው?"></textarea>
+                <div id="recordingStatus">🔴 ድምጽ በመቅዳት ላይ... (ማቆሚያውን እንደገና ይጫኑ)</div>
                 <div class="post-actions">
                     <label class="action-chip">
-                        <span>📷</span> ፎቶ/ቪዲዮ <input type="file" id="mediaFile" accept="image/*,video/*" style="display: none;">
+                        <span>📷</span> ፎቶ/ቪዲዮ <input type="file" id="mediaFile" accept="image/*,video/*" style="display: none;" onchange="fileSelected(this)">
                     </label>
-                    <label class="action-chip" onclick="alert('Live feature coming soon!')">
-                        <span>🎙️</span> ድምጽ
-                    </label>
+                    <button type="button" class="action-chip" id="voiceBtn" onclick="toggleVoiceRecording()">
+                        <span>🎙️</span> <span id="voiceText">ድምጽ</span>
+                    </button>
                 </div>
-                <button class="submit-post-btn" onclick="createPost()">ለፖረው</button>
+                <div id="selectedFileName" style="font-size: 11px; color: #38bdf8; margin-bottom: 8px;"></div>
+                <button class="submit-post-btn" id="submitBtn" onclick="createPost()">ለፖረው</button>
             </div>
 
             <!-- Posts Feed -->
@@ -280,12 +280,59 @@
     </div>
 
     <script>
-        // Supabase Credentials (የእርስዎን Supabase URL እና Anon Key እዚህ ያስገቡ)
+        // Supabase Credentials (እርስዎን የ Supabase URL እና Anon Key እዚህ ያስገቡ)
         const SUPABASE_URL = 'YOUR_SUPABASE_URL';
         const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
         const { createClient } = supabase;
         const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let mediaRecorder;
+        let audioChunks = [];
+        let recordedAudioBlob = null;
+
+        function fileSelected(input) {
+            const fileNameDiv = document.getElementById('selectedFileName');
+            if (input.files && input.files[0]) {
+                fileNameDiv.textContent = "የተመረጠ ፋይል: " + input.files[0].name;
+                recordedAudioBlob = null; // ፎቶ ሲመረጥ የድምጽ ሬኮርዱን ባዶ እናደርገዋለን
+            }
+        }
+
+        // ድምጽ የመቅዳት ተግባር (Voice Recording)
+        async function toggleVoiceRecording() {
+            const voiceText = document.getElementById('voiceText');
+            const recordingStatus = document.getElementById('recordingStatus');
+            const fileNameDiv = document.getElementById('selectedFileName');
+
+            if (!mediaRecorder || mediaRecorder.state === "inactive") {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks = [];
+
+                    mediaRecorder.ondataavailable = event => {
+                        audioChunks.push(event.data);
+                    };
+
+                    mediaRecorder.onstop = () => {
+                        recordedAudioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
+                        fileNameDiv.textContent = "የተቀዳ ድምጽ ዝግጁ ነው (Voice Ready)";
+                        document.getElementById('mediaFile').value = ''; // ፋይል ሰሌክቱን እናጠፋለን
+                    };
+
+                    mediaRecorder.start();
+                    voiceText.textContent = "አቁም";
+                    recordingStatus.style.display = "block";
+                } catch (err) {
+                    alert('ማይክሮፎን መጠቀም አልተቻለም: ' + err.message);
+                }
+            } else {
+                mediaRecorder.stop();
+                voiceText.textContent = "ድምጽ";
+                recordingStatus.style.display = "none";
+            }
+        }
 
         // ፖስቶችን ከዳታቤዝ ማምጣት
         async function fetchPosts() {
@@ -313,6 +360,8 @@
                 if (post.media_url) {
                     if (post.media_type === 'video') {
                         mediaElement = `<video src="${post.media_url}" controls></video>`;
+                    } else if (post.media_type === 'audio') {
+                        mediaElement = `<audio src="${post.media_url}" controls></audio>`;
                     } else {
                         mediaElement = `<img src="${post.media_url}" alt="Post Media">`;
                     }
@@ -332,42 +381,79 @@
             });
         }
 
-        // አዲስ ፖስት መፍጠር
+        // አዲስ ፖስት መፍጠር (ከፋይል ወይም ድምጽ ጋር ወደ Supabase Storage መጫን)
         async function createPost() {
             const contentText = document.getElementById('postContent').value.trim();
             const fileInput = document.getElementById('mediaFile');
             const file = fileInput.files[0];
+            const submitBtn = document.getElementById('submitBtn');
 
-            if (!contentText && !file) {
-                alert('እባክዎ ጽሁፍ ወይም ፋይል ያስገቡ!');
+            if (!contentText && !file && !recordedAudioBlob) {
+                alert('እባክዎ ጽሁፍ፣ ፎቶ/ቪዲዮ ወይም የድምጽ ሬኮርድ ያስገቡ!');
                 return;
             }
+
+            submitBtn.textContent = " በመጫን ላይ...";
+            submitBtn.disabled = true;
 
             let mediaUrl = null;
             let mediaType = null;
 
-            if (file) {
-                mediaType = file.type.startsWith('video') ? 'video' : 'image';
-            }
+            try {
+                let uploadFile = null;
+                if (file) {
+                    uploadFile = file;
+                    mediaType = file.type.startsWith('video') ? 'video' : 'image';
+                } else if (recordedAudioBlob) {
+                    uploadFile = new File([recordedAudioBlob], "voice_note.mp3", { type: 'audio/mp3' });
+                    mediaType = 'audio';
+                }
 
-            const { error } = await _supabase
-                .from('posts')
-                .insert([
-                    { 
-                        content: contentText, 
-                        media_url: mediaUrl, 
-                        media_type: mediaType,
-                        likes: 0 
+                if (uploadFile) {
+                    const fileName = `${Date.now()}_${uploadFile.name}`;
+                    const { data: uploadData, error: uploadError } = await _supabase.storage
+                        .from('post-media') // የሱፓቤዝ ስቶሬጅ Bucket ስም (Bucket ስሙን 'post-media' ብለው መፍጠር ይኖርብዎታል)
+                        .upload(fileName, uploadFile);
+
+                    if (uploadError) {
+                        throw uploadError;
                     }
-                ]);
 
-            if (error) {
-                alert('ፖስት ማድረግ አልተቻለም: ' + error.message);
-                console.error(error);
-            } else {
+                    // የፋይሉን ፐብሊክ ዩአርኤል ማግኘት
+                    const { data: publicUrlData } = _supabase.storage
+                        .from('post-media')
+                        .getPublicUrl(fileName);
+
+                    mediaUrl = publicUrlData.publicUrl;
+                }
+
+                // ዳታቤዝ ውስጥ ማስገባት
+                const { error: dbError } = await _supabase
+                    .from('posts')
+                    .insert([
+                        { 
+                            content: contentText, 
+                            media_url: mediaUrl, 
+                            media_type: mediaType,
+                            likes: 0 
+                        }
+                    ]);
+
+                if (dbError) throw dbError;
+
+                // 폼 ፊልዶቹን ባዶ ማድረግ
                 document.getElementById('postContent').value = '';
                 if(fileInput) fileInput.value = '';
+                document.getElementById('selectedFileName').textContent = '';
+                recordedAudioBlob = null;
                 fetchPosts();
+
+            } catch (err) {
+                alert('ፖስት ማድረግ አልተቻለም: ' + (err.message || err));
+                console.error(err);
+            } finally {
+                submitBtn.textContent = "ለፖረው";
+                submitBtn.disabled = false;
             }
         }
 
