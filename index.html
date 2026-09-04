@@ -296,7 +296,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transform: scaleX(-1); /* Mirror effect for front camera */
+            transform: scaleX(-1);
         }
 
         .live-badge-on {
@@ -347,7 +347,6 @@
 </head>
 <body>
 
-    <!-- Hidden File Inputs to connect with device camera & gallery -->
     <input type="file" id="photoInput" accept="image/*" capture="environment" style="display: none;" onchange="handleFileSelected(event, 'photo')">
     <input type="file" id="videoInput" accept="video/*" capture="environment" style="display: none;" onchange="handleFileSelected(event, 'video')">
     <input type="file" id="fileInput" accept="*/*" style="display: none;" onchange="handleFileSelected(event, 'file')">
@@ -484,28 +483,40 @@
             const btn = document.getElementById('liveToggleBtn');
             const liveBox = document.getElementById('liveViewBox');
             const videoElem = document.getElementById('liveVideoElement');
-            isLiveActive = !isLiveActive;
 
-            if(isLiveActive) {
+            if (!isLiveActive) {
                 try {
-                    mediaStreamObj = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-                    videoElem.srcObject = mediaStreamObj;
+                    // Check if browser supports mediaDevices
+                    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                        alert("⚠️ Your browser does not support live camera streaming.");
+                        return;
+                    }
+
+                    mediaStreamObj = await navigator.mediaDevices.getUserMedia({ 
+                        video: { facingMode: "user" }, 
+                        audio: true 
+                    });
                     
+                    videoElem.srcObject = mediaStreamObj;
+                    isLiveActive = true;
                     btn.textContent = "⏹️ End Live";
                     btn.classList.add('active');
                     liveBox.style.display = 'block';
+                    alert('🔴 Live stream started successfully!');
                 } catch(err) {
-                    alert("⚠️ Camera/Microphone access was denied or not supported on this browser.");
-                    isLiveActive = false;
+                    console.error("Camera error:", err);
+                    alert("⚠️ Error: Camera/Microphone access was blocked or denied. Please check your browser permissions.");
                 }
             } else {
-                if(mediaStreamObj) {
+                if (mediaStreamObj) {
                     mediaStreamObj.getTracks().forEach(track => track.stop());
                 }
                 videoElem.srcObject = null;
+                isLiveActive = false;
                 btn.textContent = "🔴 Go Live";
                 btn.classList.remove('active');
                 liveBox.style.display = 'none';
+                alert('⏹️ Live stream ended.');
             }
         }
 
@@ -589,6 +600,7 @@
             feedContainer.prepend(newPost);
             
             alert('Your post has been published to LOOP Family!');
+            document.getElementById('postInput.value').value = ''; // fixed
             document.getElementById('postInput').value = '';
             attachedMediaFile = null;
             attachedMediaType = "";
