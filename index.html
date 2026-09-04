@@ -5,17 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LOOP Super App</title>
     <style>
-        :root {
-            --bg-color: #0b0f19;
-            --surface-color: #131b2e;
-            --surface-card: #1a233a;
-            --primary-orange: #ff6b00;
-            --primary-blue: #0066ff;
-            --text-main: #ffffff;
-            --text-muted: #94a3b8;
-            --border-color: #2a3650;
-        }
-
         * {
             box-sizing: border-box;
             margin: 0;
@@ -24,87 +13,85 @@
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
+            background-color: #080c14;
+            color: #ffffff;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 15px;
+            padding: 12px;
         }
 
         .container {
             width: 100%;
-            max-width: 480px;
+            max-width: 440px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 16px;
         }
 
         /* Header */
         header {
             text-align: center;
-            padding: 15px 0;
+            padding: 10px 0;
         }
 
         header h1 {
-            font-size: 1.8rem;
-            color: var(--text-main);
+            font-size: 1.7rem;
+            color: #ffffff;
             font-weight: 800;
-            letter-spacing: 0.5px;
         }
 
         header p {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-top: 5px;
+            font-size: 0.8rem;
+            color: #8a99ad;
+            margin-top: 4px;
+            letter-spacing: 0.5px;
         }
 
         /* Grid Services Dashboard */
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
+            gap: 10px;
         }
 
         .service-card {
-            background-color: var(--surface-card);
-            border: 1px solid var(--border-color);
+            background-color: #111827;
+            border: 1px solid #1f293d;
             border-radius: 14px;
-            padding: 15px 10px;
+            padding: 14px 6px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             gap: 8px;
             cursor: pointer;
-            transition: all 0.2s ease-in-out;
-            text-decoration: none;
-            color: var(--text-main);
+            transition: all 0.2s ease;
         }
 
         .service-card:hover {
-            border-color: var(--primary-orange);
-            transform: translateY(-2px);
-            background-color: #212c47;
+            border-color: #ff6b00;
+            background-color: #1a233a;
         }
 
         .service-card .icon {
-            font-size: 1.6rem;
+            font-size: 1.5rem;
         }
 
         .service-card span {
-            font-size: 0.85rem;
+            font-size: 0.78rem;
             font-weight: 600;
             text-align: center;
+            color: #ffffff;
         }
 
-        /* LOOP Family / Social Section */
+        /* LOOP Family / Social & Monetization Section */
         .social-box {
-            background-color: var(--surface-card);
-            border: 1px solid var(--border-color);
+            background-color: #111827;
+            border: 1px solid #1f293d;
             border-radius: 16px;
-            padding: 16px;
+            padding: 14px;
             display: flex;
             flex-direction: column;
             gap: 12px;
@@ -112,105 +99,147 @@
 
         .social-header {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 8px;
             font-weight: 700;
-            font-size: 1rem;
-            color: var(--primary-orange);
+            font-size: 0.95rem;
+            color: #ff6b00;
+        }
+
+        .monetize-badge {
+            background: rgba(255, 107, 0, 0.15);
+            color: #ff6b00;
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-weight: 600;
         }
 
         .post-textarea {
             width: 100%;
-            background-color: var(--bg-color);
-            border: 1px solid var(--border-color);
+            background-color: #080c14;
+            border: 1px solid #1f293d;
             border-radius: 10px;
-            padding: 12px;
-            color: var(--text-main);
-            font-size: 0.9rem;
+            padding: 10px;
+            color: #ffffff;
+            font-size: 0.85rem;
             resize: none;
-            height: 90px;
+            height: 80px;
             outline: none;
         }
 
         .post-textarea:focus {
-            border-color: var(--primary-orange);
+            border-color: #ff6b00;
         }
 
         .post-actions {
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
 
         .action-btn {
             flex: 1;
-            background-color: var(--bg-color);
-            border: 1px solid var(--border-color);
+            background-color: #080c14;
+            border: 1px solid #1f293d;
             border-radius: 8px;
-            padding: 10px;
-            color: var(--text-muted);
-            font-size: 0.85rem;
+            padding: 9px 4px;
+            color: #94a3b8;
+            font-size: 0.78rem;
             font-weight: 600;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 4px;
             cursor: pointer;
-            transition: 0.2s;
         }
 
         .action-btn:hover {
-            background-color: #212c47;
-            color: var(--text-main);
+            background-color: #1f293d;
+            color: #ffffff;
         }
 
         .submit-post-btn {
             width: 100%;
-            background: linear-gradient(135deg, var(--primary-orange), #ff8533);
+            background: linear-gradient(135deg, #cc3300, #ff6b00);
             color: white;
             border: none;
             border-radius: 10px;
-            padding: 12px;
-            font-size: 0.95rem;
+            padding: 11px;
+            font-size: 0.9rem;
             font-weight: 700;
             cursor: pointer;
-            transition: opacity 0.2s;
         }
 
-        .submit-post-btn:hover {
-            opacity: 0.95;
+        /* Feed Display Area */
+        .feed-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 220px;
+            overflow-y: auto;
+            margin-top: 5px;
         }
 
-        /* Modal popup for modules */
+        .feed-item {
+            background: #080c14;
+            border: 1px solid #1f293d;
+            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .feed-user {
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #ff6b00;
+        }
+
+        .feed-text {
+            font-size: 0.82rem;
+            color: #e2e8f0;
+        }
+
+        .feed-footer {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: #8a99ad;
+        }
+
+        /* Modal popup */
         .modal {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.85);
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 16px;
             z-index: 1000;
         }
         .modal-content {
-            background: var(--surface-card);
-            border: 1px solid var(--border-color);
+            background: #111827;
+            border: 1px solid #ff6b00;
             width: 100%;
-            max-width: 420px;
+            max-width: 380px;
             border-radius: 16px;
-            padding: 20px;
+            padding: 18px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
         }
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             font-weight: bold;
-            font-size: 1.1rem;
+            font-size: 1rem;
+            color: #ff6b00;
         }
         .close-btn {
-            background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer;
+            background: none; border: none; color: #8a99ad; font-size: 1.2rem; cursor: pointer;
         }
     </style>
 </head>
@@ -225,43 +254,56 @@
 
         <!-- Services Grid Dashboard -->
         <div class="dashboard-grid">
-            <div class="service-card" onclick="openModule('LOOP ቱሪዝም (Tourism & Booking)')">
+            <div class="service-card" onclick="openModule('LOOP ቱሪዝም (Tourism & Booking)', 'ኢትዮጵያ ውስጥ የሚገኙ አስደናቂ መስህቦች፣ ሆቴሎች እና የትራንስፖርት ቡኪንግ ስርዓት ከእያንዳንዱ ማብራሪያ ጋር።')">
                 <div class="icon">✈️</div>
                 <span>LOOP ቱሪዝም</span>
             </div>
-            <div class="service-card" onclick="openModule('LOOP ስፖርት (Live Match & Scores)')">
+            <div class="service-card" onclick="openModule('LOOP ስፖርት (Live Match & Scores)', 'የእግር ኳስ ላይቭ ጨዋታዎች፣ ውጤቶች እና ሊግ ሰንጠረዦች በዘመናዊ መልኩ።')">
                 <div class="icon">⚽</div>
                 <span>ስፖርት</span>
             </div>
-            <div class="service-card" onclick="openModule('LOOP ቻት (AI Translation & Chat)')">
+            <div class="service-card" onclick="openModule('LOOP ቻት (AI Translation & Chat)', 'የኢሞ እና ዋትስአፕ ባህሪያት የተሟሉበት፣ በ AI ትርጉም የሚታገዝ አለም አቀፍ የውይይት ማዕቀፍ።')">
                 <div class="icon">💬</div>
                 <span>ቻት</span>
             </div>
-            <div class="service-card" onclick="openModule('LOOP AI ረዳት (Smart Assistant)')">
+            <div class="service-card" onclick="openModule('LOOP AI ረዳት (Smart Assistant)', 'ለማንኛውም ፍላጎትዎ ፈጣን ምላሽ የሚሰጥ እና አፕሊኬሽኑን የሚያስተባብር ስማርት ረዳት።')">
                 <div class="icon">🤖</div>
                 <span>AI ረዳት</span>
             </div>
-            <div class="service-card" onclick="openModule('LOOP ዜና (Multi-sector News)')">
+            <div class="service-card" onclick="openModule('LOOP ዜና (Multi-sector News)', 'ወቅታዊ ሀገራዊ እና ዓለም አቀፋዊ ባለብዙ ዘርፍ ዜናዎች።')">
                 <div class="icon">📖</div>
                 <span>ዜና</span>
             </div>
-            <div class="service-card" onclick="openModule('LOOP አየር ሁኔታ (Weather)')">
+            <div class="service-card" onclick="openModule('LOOP አየር ሁኔታ (Weather)', 'የተለያዩ ከተሞች የአየር ሁኔታ ትንበያ እና ወቅታዊ መረጃዎች።')">
                 <div class="icon">🌤️</div>
                 <span>አየር ሁኔታ</span>
             </div>
         </div>
 
-        <!-- LOOP Family Social Section -->
+        <!-- LOOP Family Social & Monetization Section -->
         <div class="social-box">
             <div class="social-header">
-                👥 LOOP Family
+                <span>👥 LOOP Family (Social & Earn)</span>
+                <span class="monetize-badge">💰 ገቢ ማስገኛ</span>
             </div>
-            <textarea class="post-textarea" id="postInput" placeholder="ምን እየተሰማዎት ነው? (Share with community...)"></textarea>
+            <textarea class="post-textarea" id="postInput" placeholder="ምን እየተሰማዎት ነው? (TikTok/FB style post & earn...)"></textarea>
             <div class="post-actions">
-                <button class="action-btn" onclick="alert('ፎቶ/ቪዲዮ መጫኛ ክፍት ተደርጓል!')">📷 ፎቶ/ቪዲዮ</button>
-                <button class="action-btn" onclick="alert('የድምጽ መልእክት መቅረጫ ተከፍቷል!')">🎙️ ድምጽ</button>
+                <button class="action-btn" onclick="alert('ቲክቶክ/ፌስቡክ ቪዲዮ እና ፎቶ መጫኛ ተከፍቷል!')">📷 ቪዲዮ/ፎቶ</button>
+                <button class="action-btn" onclick="alert('የድምጽ ስቱዲዮ እና ላይቭ ስትሪም ተከፍቷል!')">🎙️ ላይቭ/ድምጽ</button>
             </div>
-            <button class="submit-post-btn" onclick="submitPost()">ለቀቅ (Post)</button>
+            <button class="submit-post-btn" onclick="submitPost()">ሀሳብ ልቀቅ & ገቢ አግኝ</button>
+
+            <!-- Live Post Feed Container -->
+            <div class="feed-container" id="feedContainer">
+                <div class="feed-item">
+                    <div class="feed-user">መለሰ ይማነ (Developer)</div>
+                    <div class="feed-text">እንኳን ወደ LOOP Super App በደህና መጡ! አዲሱ የሶሻል እና የገቢ ማስገኛ ስርዓታችን ተጀምሯል። 🚀</div>
+                    <div class="feed-footer">
+                        <span>❤️ 24 አድናቆት</span>
+                        <span>💬 5 አስተያየት</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -272,28 +314,42 @@
                 <span id="modalTitle">ማዕቀፍ</span>
                 <button class="close-btn" onclick="closeModule()">✕</button>
             </div>
-            <p id="modalDesc" style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5;">ይህ አገልግሎት ሙሉ በሙሉ በሂደት ላይ ያለ ሲሆን ቀጣይነት ባለው መልኩ የየራሱን የተሟላ ገጽ እና ግብይት ይይዛል።</p>
+            <p id="modalDesc" style="color: #94a3b8; font-size: 0.88rem; line-height: 1.5;"></p>
             <button class="submit-post-btn" onclick="closeModule()">ተመለስ</button>
         </div>
     </div>
 
     <script>
-        function openModule(moduleName) {
-            document.getElementById('modalTitle').textContent = moduleName;
+        function openModule(name, desc) {
+            document.getElementById('modalTitle').textContent = name;
+            document.getElementById('modalDesc').textContent = desc;
             document.getElementById('moduleModal').style.display = 'flex';
         }
-
         function closeModule() {
             document.getElementById('moduleModal').style.display = 'none';
         }
-
         function submitPost() {
             const val = document.getElementById('postInput').value.trim();
-            if(val === '') {
+            if(!val) {
                 alert('እባክዎ የሚለቁትን ሀሳብ ይጻፉ!');
                 return;
             }
-            alert('ሀሳብዎ በ LOOP Family ተሳክቷል!');
+            
+            // Add post dynamically to feed container
+            const feedContainer = document.getElementById('feedContainer');
+            const newPost = document.createElement('div');
+            newPost.className = 'feed-item';
+            newPost.innerHTML = `
+                <div class="feed-user">ተጠቃሚ (LOOP Member)</div>
+                <div class="feed-text">${val}</div>
+                <div class="feed-footer">
+                    <span>❤️ 1 አድናቆት</span>
+                    <span>💬 0 አስተያየት</span>
+                </div>
+            `;
+            feedContainer.prepend(newPost);
+            
+            alert('ሀሳብዎ ተለቆ በ LOOP Family ተሳክቷል! (የገቢ ቦርሳዎ ተዘምኗል 💰)');
             document.getElementById('postInput').value = '';
         }
     </script>
