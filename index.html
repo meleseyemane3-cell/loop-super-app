@@ -20,7 +20,7 @@
             min-height: 100vh;
         }
 
-        /* 1. የስፕላሽ ስክሪን ስታይል (Splash Screen & Spinner) */
+        /* የስፕላሽ ስክሪን ስታይል */
         #splash-screen {
             position: fixed;
             top: 0;
@@ -69,13 +69,13 @@
             font-weight: bold;
         }
 
-        /* 2. ዋናው አፕሊኬሽን ማዕቀፍ */
+        /* ዋናው አፕሊኬሽን ማዕቀፍ */
         #app-container {
             width: 100%;
             max-width: 500px;
             padding: 20px;
             box-sizing: border-box;
-            display: none; /* ስፕላሽ ሲጠናቀቅ ይታያል */
+            display: none;
         }
 
         .card {
@@ -110,7 +110,6 @@
         }
 
         .btn-primary { background: #3b82f6; color: white; }
-        .btn-primary:hover { background: #2563eb; }
         .btn-success { background: #10b981; color: white; }
         .btn-danger { background: #ef4444; color: white; }
 
@@ -130,7 +129,7 @@
 </head>
 <body>
 
-    <!-- የስፕላሽ ስክሪን (በ 2 ሰከንድ ሰዓት ማስተካከያ) -->
+    <!-- የስፕላሽ ስክሪን -->
     <div id="splash-screen">
         <div class="spinner-box">
             <span class="spinner-text-inner">LOOP</span>
@@ -148,7 +147,6 @@
                 <input type="email" id="auth-email" placeholder="ኢሜልዎን ያስገቡ" />
                 <input type="password" id="auth-password" placeholder="ሚስጥር ቁጥር (Password)" />
                 
-                <!-- ሎግኢን እንዳይጠይቅ የማስቀመጫ (Remember Me) አማራጭ -->
                 <label class="checkbox-container">
                     <input type="checkbox" id="remember-me" checked> ሎግኢን እንዳይጠይቅ አስታውሰኝ (Remember Me)
                 </label>
@@ -157,7 +155,6 @@
                 <button class="btn-success" onclick="handleSignup()">አካውንት ክፈት (Sign Up)</button>
             </div>
 
-            <!-- ተጠቃሚው ከገባ በኋላ የሚታይ -->
             <div id="user-info" style="display: none;">
                 <p>እንኳን ደህና መጡ: <span id="user-email-display" style="color: #34d399; font-weight: bold;"></span></p>
                 <button class="btn-danger" onclick="handleLogout()">ውጣ (Sign Out)</button>
@@ -174,44 +171,62 @@
     </div>
 
     <script>
-        // Supabase ማዋቀሪያ (እባክዎ የသင့်ን ዩአል እና አኖን ኪ [URL & Anon Key] እዚህ ያስገቡ)
-        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Supabase ደህንነቱ የተጠበቀ አጠቃቀም (Safe Initialization)
+        let supabase = null;
+        try {
+            const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+            const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+            if (window.supabase) {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            }
+        } catch (e) {
+            console.error("Supabase ማገናኘት አልተቻለም:", e);
+        }
 
-        // 1. ስፕላሽ ስክሪኑን ለ 2 ሰከንድ አሳይቶ ወደ ዋናው ገጽ ማሸጋገር
+        // ስፕላሽ ስክሪኑ በማንኛውም ሁኔታ ከ 2 ሰከንድ በኋላ በሰላም እንዲከፈት የተደረገ አስተማማኝ ትዕዛዝ
         window.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 const splash = document.getElementById('splash-screen');
                 const app = document.getElementById('app-container');
                 
-                splash.style.opacity = '0';
-                setTimeout(() => {
-                    splash.style.display = 'none';
-                    app.style.display = 'block';
-                    checkExistingSession(); // የተጠቃሚውን የሎግኢን ሁኔታ ማረጋገጥ
-                }, 500);
-            }, 2000); // 2000 ሚሊሰከንድ (2 ሰከንድ)
+                if (splash) {
+                    splash.style.opacity = '0';
+                    setTimeout(() => {
+                        splash.style.display = 'none';
+                        if (app) app.style.display = 'block';
+                        
+                        // getSession ደህንነቱን ጠብቆ ማስኬድ
+                        if (supabase) {
+                            checkExistingSession();
+                        }
+                    }, 500);
+                }
+            }, 2000);
         });
 
-        // 2. የተጠቃሚውን ስሺን ማረጋገጥ (Remember Me Logic)
+        // የተጠቃሚውን ስሺን ማረጋገጥ (Remember Me Logic)
         async function checkExistingSession() {
-            const savedUser = localStorage.getItem('loop_user_session');
-            const { data: { session } } = await supabase.auth.getSession();
+            try {
+                const savedUser = localStorage.getItem('loop_user_session');
+                const { data: { session } } = await supabase.auth.getSession();
 
-            if (session || savedUser) {
-                const userEmail = session ? session.user.email : JSON.parse(savedUser).email;
-                document.getElementById('auth-form').style.display = 'none';
-                document.getElementById('user-info').style.display = 'block';
-                document.getElementById('user-email-display').textContent = userEmail;
-            } else {
-                document.getElementById('auth-form').style.display = 'block';
-                document.getElementById('user-info').style.display = 'none';
+                if (session || savedUser) {
+                    const userEmail = session ? session.user.email : JSON.parse(savedUser).email;
+                    document.getElementById('auth-form').style.display = 'none';
+                    document.getElementById('user-info').style.display = 'block';
+                    document.getElementById('user-email-display').textContent = userEmail;
+                } else {
+                    document.getElementById('auth-form').style.display = 'block';
+                    document.getElementById('user-info').style.display = 'none';
+                }
+            } catch (err) {
+                console.error("Session check error:", err);
             }
         }
 
-        // 3. ሎግኢን ማድረግ
+        // ሎግኢን ማድረግ
         async function handleLogin() {
+            if (!supabase) { alert("ሲስተሙ አልተገናኘም!"); return; }
             const email = document.getElementById('auth-email').value;
             const password = document.getElementById('auth-password').value;
             const rememberMe = document.getElementById('remember-me').checked;
@@ -233,8 +248,9 @@
             }
         }
 
-        // 4. አካውንት መክፈት (Sign Up)
+        // አካውንት መክፈት (Sign Up)
         async function handleSignup() {
+            if (!supabase) { alert("ሲስተሙ አልተገናኘም!"); return; }
             const email = document.getElementById('auth-email').value;
             const password = document.getElementById('auth-password').value;
 
@@ -251,16 +267,17 @@
             }
         }
 
-        // 5. ከሲስተሙ መውጣት (Sign Out)
+        // ከሲስተሙ መውጣት (Sign Out)
         async function handleLogout() {
-            await supabase.auth.signOut();
+            if (supabase) await supabase.auth.signOut();
             localStorage.removeItem('loop_user_session');
             alert("ወጥተዋል!");
             location.reload();
         }
 
-        // 6. ጥብቅ የደህንነት መስፈርትን ጠብቆ ፖስት ማድረግ (Strict RLS)
+        // ፖስት ማድረግ (Strict RLS)
         async function submitPost() {
+            if (!supabase) { alert("ሲስተሙ አልተገናኘም!"); return; }
             const { data: { user } } = await supabase.auth.getUser();
             const savedUser = localStorage.getItem('loop_user_session');
 
@@ -279,7 +296,6 @@
 
             let mediaUrl = null;
 
-            // ፋይል ካለ ወደ Storage መጫን
             if (fileInput) {
                 const fileName = `${Date.now()}_${fileInput.name}`;
                 const { data: uploadData, error: uploadError } = await supabase.storage
@@ -298,10 +314,8 @@
                 mediaUrl = publicUrlData.publicUrl;
             }
 
-            // የዩዘር ID ማግኘት
             const userId = user ? user.id : JSON.parse(savedUser).id;
 
-            // ዳታቤዝ ላይ ፖስቱን በደህንነት ፖሊሲ ማስቀመጥ
             const { error: postError } = await supabase
                 .from('posts')
                 .insert([{ content: content, media_url: mediaUrl, user_id: userId }]);
