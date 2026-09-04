@@ -1,529 +1,307 @@
 <!DOCTYPE html>
 <html lang="am">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LOOP Super App - Ethiopia Tourism</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOOP Super App</title>
+    <!-- Supabase CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            background-color: #0b0f19;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+        }
 
-  <!-- Supabase CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+        /* 1. የስፕላሽ ስክሪን ስታይል (Splash Screen) */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0b0f19;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, "Noto Sans Ethiopic", sans-serif;
-    }
+        .loader-logo {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            animation: spinPulse 2s infinite ease-in-out;
+            box-shadow: 0 0 20px rgba(78, 204, 163, 0.4);
+        }
 
-    body {
-      min-height: 100vh;
-      background: #0b1120;
-      color: #f8fafc;
-      display: flex;
-      justify-content: center;
-    }
+        @keyframes spinPulse {
+            0% { transform: scale(0.9) rotate(0deg); opacity: 0.8; }
+            50% { transform: scale(1.1) rotate(180deg); opacity: 1; border: 3px solid #4ecca3; }
+            100% { transform: scale(0.9) rotate(360deg); opacity: 0.8; }
+        }
 
-    .app {
-      width: 100%;
-      max-width: 520px;
-      min-height: 100vh;
-      background: #0f172a;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      padding-bottom: 70px;
-    }
+        .loader-text {
+            margin-top: 20px;
+            font-size: 18px;
+            letter-spacing: 2px;
+            color: #4ecca3;
+            font-weight: bold;
+        }
 
-    header {
-      padding: 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #0f172a;
-      border-bottom: 1px solid #1e293b;
-    }
+        /* 2. ዋናው አፕሊኬሽን ማዕቀፍ */
+        #app-container {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            box-sizing: border-box;
+            display: none; /* ስፕላሽ ሲጠናቀቅ ይታያል */
+        }
 
-    .app-logo {
-      color: #38bdf8;
-      font-size: 20px;
-      font-weight: bold;
-      text-align: center;
-      flex-grow: 1;
-    }
+        .card {
+            background: #111827;
+            border: 1px solid #1f2937;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
 
-    .lang-select {
-      background: #1e293b;
-      color: #38bdf8;
-      border: 1px solid #334155;
-      padding: 5px 10px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border: 1px solid #374151;
+            background: #1f2937;
+            color: white;
+            box-sizing: border-box;
+        }
 
-    main {
-      padding: 15px;
-      flex-grow: 1;
-      overflow-y: auto;
-    }
+        button {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: background 0.2s;
+        }
 
-    .section-title {
-      color: #38bdf8;
-      font-size: 16px;
-      font-weight: bold;
-      margin-bottom: 12px;
-    }
+        .btn-primary { background: #3b82f6; color: white; }
+        .btn-primary:hover { background: #2563eb; }
+        .btn-success { background: #10b981; color: white; }
+        .btn-danger { background: #ef4444; color: white; }
 
-    /* Services Grid */
-    .services-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
-    .service-card {
-      background: #1e293b;
-      border: 1px solid #334155;
-      border-radius: 12px;
-      padding: 15px 10px;
-      text-align: center;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .service-card:hover {
-      border-color: #38bdf8;
-    }
-
-    .service-icon {
-      font-size: 24px;
-      margin-bottom: 5px;
-    }
-
-    .service-name {
-      color: #f8fafc;
-      font-size: 13px;
-    }
-
-    /* Panel & Post Card */
-    .panel,
-    .post-card {
-      background: #1e293b;
-      border: 1px solid #334155;
-      border-radius: 14px;
-      padding: 15px;
-      margin-bottom: 15px;
-    }
-
-    textarea {
-      width: 100%;
-      min-height: 80px;
-      resize: vertical;
-      padding: 12px;
-      border-radius: 10px;
-      border: 1px solid #475569;
-      outline: none;
-      background: #0f172a;
-      color: #fff;
-      font-size: 14px;
-    }
-
-    textarea:focus {
-      border-color: #38bdf8;
-    }
-
-    .toolbar {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin: 10px 0;
-    }
-
-    .tool-btn {
-      border: 1px solid #475569;
-      border-radius: 8px;
-      background: #0f172a;
-      color: #cbd5e1;
-      padding: 8px 10px;
-      cursor: pointer;
-      font-size: 12px;
-    }
-
-    .tool-btn:hover {
-      color: #38bdf8;
-      border-color: #38bdf8;
-    }
-
-    .publish-btn {
-      width: 100%;
-      border: none;
-      border-radius: 9px;
-      background: #0284c7;
-      color: #fff;
-      padding: 11px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: bold;
-    }
-
-    .publish-btn:hover {
-      background: #0369a1;
-    }
-
-    .status {
-      min-height: 18px;
-      margin: 5px 0;
-      color: #38bdf8;
-      font-size: 11px;
-    }
-
-    .error {
-      color: #f87171;
-    }
-
-    .post-content {
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-      line-height: 1.5;
-      color: #f8fafc;
-      font-size: 14px;
-    }
-
-    .post-media {
-      width: 100%;
-      max-height: 300px;
-      object-fit: cover;
-      margin-top: 10px;
-      border-radius: 8px;
-      background: #020617;
-    }
-
-    .post-actions {
-      display: flex;
-      justify-content: space-around;
-      margin-top: 12px;
-      padding-top: 8px;
-      border-top: 1px solid #334155;
-    }
-
-    .action-btn {
-      background: none;
-      border: none;
-      color: #94a3b8;
-      cursor: pointer;
-      font-size: 12px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .action-btn:hover {
-      color: #38bdf8;
-    }
-
-    /* Bottom Navigation Bar */
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      max-width: 520px;
-      background: #0f172a;
-      border-top: 1px solid #1e293b;
-      display: flex;
-      justify-content: space-around;
-      padding: 10px 0;
-      z-index: 100;
-    }
-
-    .nav-item {
-      background: none;
-      border: none;
-      color: #94a3b8;
-      cursor: pointer;
-      text-align: center;
-      font-size: 10px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 3px;
-    }
-
-    .nav-item.active, .nav-item:hover {
-      color: #38bdf8;
-    }
-
-    .nav-icon {
-      font-size: 18px;
-    }
-
-    .connection {
-      font-size: 10px;
-      text-align: center;
-      margin-bottom: 8px;
-      color: #94a3b8;
-    }
-  </style>
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+            font-size: 14px;
+            color: #9ca3af;
+        }
+        .checkbox-container input {
+            width: auto;
+            margin: 0;
+        }
+    </style>
 </head>
-
 <body>
-  <div class="app">
-    <header>
-      <div style="width: 24px;"></div>
-      <div class="app-logo">LOOP Super App</div>
-      <select class="lang-select">
-        <option>አማርኛ</option>
-        <option>English</option>
-      </select>
-    </header>
 
-    <main>
-      <div id="connectionStatus" class="connection">Realtime በመገናኘት ላይ...</div>
+    <!-- የስፕላሽ ስክሪን (በሎጎ እና ሽክርክሪት) -->
+    <div id="splash-screen">
+        <img src="21185.png" alt="LOOP Logo" class="loader-logo">
+        <div class="loader-text">LOOP Super App በመጫን ላይ...</div>
+    </div>
 
-      <!-- አገልግሎቶች (Services Grid) -->
-      <div class="section-title">አገልግሎቶች</div>
-      <div class="services-grid">
-        <div class="service-card" onclick="alert('ቱሪዝም ገጽ')">
-          <div class="service-icon">✈️</div>
-          <div class="service-name">ቱሪዝም</div>
-        </div>
-        <div class="service-card" onclick="alert('አየር ሁኔታ ገጽ')">
-          <div class="service-icon">🌧️</div>
-          <div class="service-name">አየር ሁኔታ</div>
-        </div>
-        <div class="service-card" onclick="alert('ሆቴል ገጽ')">
-          <div class="service-icon">🏨</div>
-          <div class="service-name">ሆቴል</div>
-        </div>
-        <div class="service-card" onclick="alert('ትኬት ገጽ')">
-          <div class="service-icon">🎫</div>
-          <div class="service-name">ትኬት</div>
-        </div>
-        <div class="service-card" onclick="alert('ቻት ገጽ')">
-          <div class="service-icon">💬</div>
-          <div class="service-name">ቻት</div>
-        </div>
-        <div class="service-card" onclick="alert('Profile ገጽ')">
-          <div class="service-icon">👤</div>
-          <div class="service-name">Profile</div>
-        </div>
-      </div>
+    <!-- ዋናው የአፕ ይዘት -->
+    <div id="app-container">
+        <!-- የሎግኢን ካርድ -->
+        <div id="auth-card" class="card">
+            <h3 style="margin-top: 0; color: #60a5fa;">🔐 LOOP ደህንነቱ የተጠበቀ መግቢያ</h3>
+            <div id="auth-form">
+                <input type="email" id="auth-email" placeholder="ኢሜልዎን ያስገቡ" />
+                <input type="password" id="auth-password" placeholder="ሚስጥር ቁጥር (Password)" />
+                
+                <!-- ሎግኢን እንዳይጠይቅ የማስቀመጫ (Remember Me) አማራጭ -->
+                <label class="checkbox-container">
+                    <input type="checkbox" id="remember-me" checked> ሎግኢን እንዳይጠይቅ አስታውሰኝ (Remember Me)
+                </label>
 
-      <!-- LOOP Family Feed & Post Panel -->
-      <section class="panel">
-        <div class="section-title">👥 LOOP Family</div>
-
-        <textarea
-          id="postContent"
-          placeholder="ምን እየተሰማዎት ነው?"
-        ></textarea>
-
-        <div id="selectedFile" style="font-size: 11px; color: #cbd5e1; margin-top: 5px;"></div>
-        <div id="statusMessage" class="status"></div>
-
-        <div class="toolbar">
-          <label class="tool-btn">
-            📷 ፎቶ/ቪዲዮ
-            <input id="mediaFile" type="file" accept="image/*,video/*" hidden />
-          </label>
-          <button id="voiceBtn" class="tool-btn" type="button">🎙️ ድምጽ</button>
-          <button id="liveBtn" class="tool-btn" type="button">🔴 ላይቭ</button>
-        </div>
-
-        <button id="publishBtn" class="publish-btn" type="button">
-          ለቀው (ፖስት አድርግ)
-        </button>
-      </section>
-
-      <section id="postsContainer"></section>
-    </main>
-
-    <!-- Bottom Navigation -->
-    <nav class="bottom-nav">
-      <button class="nav-item active">
-        <span class="nav-icon">🏠</span>
-        <span>Home</span>
-      </button>
-      <button class="nav-item" onclick="alert('Tourism')">
-        <span class="nav-icon">✈️</span>
-        <span>Tourism</span>
-      </button>
-      <button class="nav-item" onclick="alert('Weather')">
-        <span class="nav-icon">🌧️</span>
-        <span>Weather</span>
-      </button>
-      <button class="nav-item" onclick="alert('Hotel')">
-        <span class="nav-icon">🏨</span>
-        <span>Hotel</span>
-      </button>
-      <button class="nav-item" onclick="alert('Profile')">
-        <span class="nav-icon">👤</span>
-        <span>Profile</span>
-      </button>
-    </nav>
-  </div>
-
-  <script>
-    const SUPABASE_URL = 'https://chmwdtxktrezasgbbvjr.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_QQAtpXYe2IQqmvpFrRyBXg_GWpnnQqc';
-
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    const postContent = document.getElementById('postContent');
-    const mediaFile = document.getElementById('mediaFile');
-    const selectedFile = document.getElementById('selectedFile');
-    const statusMessage = document.getElementById('statusMessage');
-    const postsContainer = document.getElementById('postsContainer');
-    const publishBtn = document.getElementById('publishBtn');
-    const connectionStatus = document.getElementById('connectionStatus');
-
-    function setStatus(message, isError = false) {
-      statusMessage.textContent = message;
-      statusMessage.className = isError ? 'status error' : 'status';
-    }
-
-    function escapeHtml(value) {
-      return String(value).replace(/[&<>"']/g, character => ({
-        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
-      }[character]));
-    }
-
-    mediaFile.addEventListener('change', () => {
-      if (mediaFile.files && mediaFile.files[0]) {
-        selectedFile.textContent = 'ፋይል ተመርጧል: ' + mediaFile.files[0].name;
-      } else {
-        selectedFile.textContent = '';
-      }
-    });
-
-    async function uploadMedia(file) {
-      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
-      const filePath = `${Date.now()}_${safeName}`;
-      
-      const { error } = await supabaseClient.storage
-        .from('post-media')
-        .upload(filePath, file, { upsert: false, contentType: file.type });
-
-      if (error) throw error;
-
-      const { data } = supabaseClient.storage.from('post-media').getPublicUrl(filePath);
-      return data.publicUrl;
-    }
-
-    async function fetchPosts() {
-      try {
-        const { data, error } = await supabaseClient
-          .from('posts')
-          .select('*')
-          .order('created_at', { ascending: false });
-
-        if (error) throw error;
-
-        postsContainer.innerHTML = '';
-
-        if (!data || data.length === 0) {
-          postsContainer.innerHTML = `<div style="text-align:center; color:#94a3b8; padding:15px;">ምንም ፖስት የለም።</div>`;
-          return;
-        }
-
-        data.forEach(post => {
-          const card = document.createElement('article');
-          card.className = 'post-card';
-
-          let mediaHtml = '';
-          if (post.media_url) {
-            if (post.media_type === 'image') {
-              mediaHtml = `<img class="post-media" src="${escapeHtml(post.media_url)}" />`;
-            } else if (post.media_type === 'video' || post.media_type === 'live') {
-              mediaHtml = `<video class="post-media" src="${escapeHtml(post.media_url)}" controls></video>`;
-            } else if (post.media_type === 'audio') {
-              mediaHtml = `<audio style="width:100%; margin-top:10px;" src="${escapeHtml(post.media_url)}" controls></audio>`;
-            }
-          }
-
-          card.innerHTML = `
-            <div class="post-content">${escapeHtml(post.content || '')}</div>
-            ${mediaHtml}
-            <div class="post-actions">
-              <button class="action-btn" onclick="likePost(${post.id}, ${post.likes || 0})">❤️ ላይክ (${post.likes || 0})</button>
-              <button class="action-btn" onclick="alert('ኮሜንት መስጫ ገጽ በቅርቡ ይከፈታል')">💬 ኮሜንት</button>
-              <button class="action-btn" onclick="alert('ሊንኩ ተገልብጧል!')">ሼር</button>
-              <button class="action-btn" onclick="alert('ጓደኝነት ጥያቄ ተልኳል')">➕ አድ ፍሬንድ</button>
+                <button class="btn-primary" onclick="handleLogin()">ግባ (Sign In)</button>
+                <button class="btn-success" onclick="handleSignup()">አካውንት ክፈት (Sign Up)</button>
             </div>
-          `;
-          postsContainer.appendChild(card);
+
+            <div id="user-info" style="display: none;">
+                <p>እንኳን ደህና መጡ: <span id="user-email-display" style="color: #34d399; font-weight: bold;"></span></p>
+                <button class="btn-danger" onclick="handleLogout()">ውጣ (Sign Out)</button>
+            </div>
+        </div>
+
+        <!-- የፖስት መስጫ ካርድ -->
+        <div class="card">
+            <h3 style="margin-top: 0; color: #60a5fa;">✍️ ፖስት አድርግ (LOOP Family)</h3>
+            <textarea id="post-content" rows="3" placeholder="ምን እየተሰማዎት ነው?"></textarea>
+            <input type="file" id="post-media-file" accept="image/*" />
+            <button class="btn-primary" onclick="submitPost()">ለቀው (ፖስት አድርግ)</button>
+        </div>
+    </div>
+
+    <script>
+        // Supabase ማዋቀሪያ (የእርስዎን ማስገቢያ ቁልፎች ያስገቡ)
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // 1. ስፕላሽ ስክሪኑን ለ 2 ሰከንድ አሳይቶ ወደ ዋናው ገጽ ማሸጋገር
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const splash = document.getElementById('splash-screen');
+                const app = document.getElementById('app-container');
+                
+                splash.style.opacity = '0';
+                setTimeout(() => {
+                    splash.style.display = 'none';
+                    app.style.display = 'block';
+                    checkExistingSession(); // የተጠቃሚውን የሎግኢን ሁኔታ ማረጋገጥ
+                }, 500);
+            }, 2000); // 2000 ሚሊሰከንድ (2 ሰከንድ)
         });
-      } catch (err) {
-        console.error(err);
-      }
-    }
 
-    async function createPost() {
-      const text = postContent.value.trim();
-      const file = mediaFile.files[0];
+        // 2. የተጠቃሚውን ስሺን ማረጋገጥ (Remember Me Logic)
+        async function checkExistingSession() {
+            // መጀመሪያ ከ LocalStorage ማረጋገጥ
+            const savedUser = localStorage.getItem('loop_user_session');
+            const { data: { session } } = await supabase.auth.getSession();
 
-      if (!text && !file) {
-        setStatus('እባክዎ ጽሁፍ ወይም ፎቶ ያስገቡ።', true);
-        return;
-      }
-
-      publishBtn.disabled = true;
-      publishBtn.textContent = 'በመላክ ላይ...';
-      setStatus('በመላክ ላይ...');
-
-      try {
-        let mediaUrl = null;
-        let mediaType = null;
-
-        if (file) {
-          mediaUrl = await uploadMedia(file);
-          mediaType = file.type.startsWith('video') ? 'video' : 'image';
+            if (session || savedUser) {
+                const userEmail = session ? session.user.email : JSON.parse(savedUser).email;
+                document.getElementById('auth-form').style.display = 'none';
+                document.getElementById('user-info').style.display = 'block';
+                document.getElementById('user-email-display').textContent = userEmail;
+            } else {
+                document.getElementById('auth-form').style.display = 'block';
+                document.getElementById('user-info').style.display = 'none';
+            }
         }
 
-        const { error } = await supabaseClient.from('posts').insert({
-          content: text,
-          media_url: mediaUrl,
-          media_type: mediaType,
-          likes: 0
-        });
+        // 3. ሎግኢን ማድረግ
+        async function handleLogin() {
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+            const rememberMe = document.getElementById('remember-me').checked;
 
-        if (error) throw error;
+            if (!email || !password) {
+                alert("እባክዎ ኢሜል እና ፓስወርድ ይሙሉ!");
+                return;
+            }
 
-        postContent.value = '';
-        mediaFile.value = '';
-        selectedFile.textContent = '';
-        setStatus('✅ ተሳክቶ ተለጥፏል!');
-        fetchPosts();
-      } catch (err) {
-        setStatus('ማስተላለፍ አልተቻለም: ' + err.message, true);
-      } finally {
-        publishBtn.disabled = false;
-        publishBtn.textContent = 'ለቀው (ፖስት አድርግ)';
-      }
-    }
-
-    async function likePost(id, currentLikes) {
-      try {
-        await supabaseClient.from('posts').update({ likes: currentLikes + 1 }).eq('id', id);
-        fetchPosts();
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    publishBtn.addEventListener('click', createPost);
-    fetchPosts();
-
-    // Realtime connection
-    supabaseClient
-      .channel('loop-family-posts')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'posts' }, () => fetchPosts())
-      .subscribe(status => {
-        if (status === 'SUBSCRIBED') {
-          connectionStatus.textContent = '✅ ተገናኝቷል (Realtime Active)';
-          connectionStatus.style.color = '#4ade80';
+            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+            if (error) {
+                alert("መግባት አልተቻለም: " + error.message);
+            } else {
+                alert("በሰላም ገብተዋል!");
+                // ሎግኢን እንዳይጠይቅ ሴቭ ማድረግ ከተመረጠ
+                if (rememberMe) {
+                    localStorage.setItem('loop_user_session', JSON.stringify({ email: data.user.email }));
+                }
+                location.reload();
+            }
         }
-      });
-  </script>
+
+        // 4. አካውንት መክፈት (Sign Up)
+        async function handleSignup() {
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+
+            if (!email || !password) {
+                alert("እባክዎ ኢሜል እና ፓስወርድ ይሙሉ!");
+                return;
+            }
+
+            const { data, error } = await supabase.auth.signUp({ email, password });
+            if (error) {
+                alert("ምዝገባ አልተሳካም: " + error.message);
+            } else {
+                alert("ምዝገባው ተሳክቷል! አሁን መግባት (Sign In) ይችላሉ።");
+            }
+        }
+
+        // 5. ከሲስተሙ መውጣት (Sign Out)
+        async function handleLogout() {
+            await supabase.auth.signOut();
+            localStorage.removeItem('loop_user_session'); // ሴቭ የተደረገውን ማጥፋት
+            alert("ወጥተዋል!");
+            location.reload();
+        }
+
+        // 6. ጥብቅ የደህንነት መስፈርትን ጠብቆ ፖስት ማድረግ
+        async function submitPost() {
+            const { data: { user } } = await supabase.auth.getUser();
+            const savedUser = localStorage.getItem('loop_user_session');
+
+            if (!user && !savedUser) {
+                alert("እባክዎ መጀመሪያ ከላይ በአካውንት ይግቡ (Sign In)!");
+                return;
+            }
+
+            const content = document.getElementById('post-content').value;
+            const fileInput = document.getElementById('post-media-file').files[0];
+
+            if (!content && !fileInput) {
+                alert("እባክዎ ጽሁፍ ወይም ፎቶ ያስገቡ!");
+                return;
+            }
+
+            let mediaUrl = null;
+
+            // ፋይል ካለ ወደ Storage መጫን
+            if (fileInput) {
+                const fileName = `${Date.now()}_${fileInput.name}`;
+                const { data: uploadData, error: uploadError } = await supabase.storage
+                    .from('post-media')
+                    .upload(fileName, fileInput);
+
+                if (uploadError) {
+                    alert("ፋይል መጫን አልተቻለም: " + uploadError.message);
+                    return;
+                }
+
+                // የፋይሉን ፐብሊክ ሊንክ ማግኘት
+                const { data: publicUrlData } = supabase.storage
+                    .from('post-media')
+                    .getPublicUrl(fileName);
+                
+                mediaUrl = publicUrlData.publicUrl;
+            }
+
+            // ዳታቤዝ ላይ ፖስቱን ከ user_id ጋር ማስቀመጥ
+            const userId = user ? user.id : JSON.parse(savedUser).id;
+
+            const { error: postError } = await supabase
+                .from('posts')
+                .insert([{ content: content, media_url: mediaUrl, user_id: userId }]);
+
+            if (postError) {
+                alert("ፖስት ማድረግ አልተቻለም: " + postError.message);
+            } else {
+                alert("በተሳካ ሁኔታ ተለጠፈ!");
+                document.getElementById('post-content').value = '';
+                document.getElementById('post-media-file').value = '';
+            }
+        }
+    </script>
 </body>
 </html>
