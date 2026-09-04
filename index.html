@@ -119,13 +119,6 @@
 
         .live-btn.active {
             background: #16a34a;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.6; }
-            100% { opacity: 1; }
         }
 
         .post-textarea {
@@ -235,6 +228,14 @@
             line-height: 1.4;
         }
 
+        .feed-media-preview {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-top: 4px;
+        }
+
         .feed-interactions {
             display: flex;
             justify-content: space-between;
@@ -284,16 +285,18 @@
 
         .live-video-sim {
             width: 100%;
-            height: 140px;
+            height: 180px;
             background: #000;
             border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ef4444;
-            font-weight: bold;
-            font-size: 0.9rem;
+            overflow: hidden;
             position: relative;
+        }
+
+        #liveVideoElement {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1); /* Mirror effect for front camera */
         }
 
         .live-badge-on {
@@ -305,6 +308,7 @@
             padding: 2px 6px;
             font-size: 0.65rem;
             border-radius: 4px;
+            z-index: 10;
         }
 
         .modal {
@@ -342,6 +346,11 @@
     </style>
 </head>
 <body>
+
+    <!-- Hidden File Inputs to connect with device camera & gallery -->
+    <input type="file" id="photoInput" accept="image/*" capture="environment" style="display: none;" onchange="handleFileSelected(event, 'photo')">
+    <input type="file" id="videoInput" accept="video/*" capture="environment" style="display: none;" onchange="handleFileSelected(event, 'video')">
+    <input type="file" id="fileInput" accept="*/*" style="display: none;" onchange="handleFileSelected(event, 'file')">
 
     <div class="container">
         <header>
@@ -385,17 +394,17 @@
             <div class="live-view-box" id="liveViewBox">
                 <div class="live-video-sim">
                     <span class="live-badge-on">● LIVE ON AIR</span>
-                    🎥 Your Live Stream is broadcasting...
+                    <video id="liveVideoElement" autoplay playsinline></video>
                 </div>
-                <p style="font-size: 0.75rem; color: #94a3b8; margin-top: 6px;">Your followers are watching and commenting!</p>
+                <p style="font-size: 0.75rem; color: #94a3b8; margin-top: 6px;">Your live camera stream is broadcasting...</p>
             </div>
             
             <textarea class="post-textarea" id="postInput" placeholder="What's on your mind? Share text, photo, video or file..."></textarea>
             
             <div class="post-actions-row">
-                <div class="action-chip" id="chipPhoto" onclick="selectMedia('📷 Photo')">📷 Photo</div>
-                <div class="action-chip" id="chipVideo" onclick="selectMedia('🎥 Video')">🎥 Video</div>
-                <div class="action-chip" id="chipFile" onclick="selectMedia('📁 File')">📁 File</div>
+                <div class="action-chip" id="chipPhoto" onclick="triggerFileInput('photo')">📷 Photo</div>
+                <div class="action-chip" id="chipVideo" onclick="triggerFileInput('video')">🎥 Video</div>
+                <div class="action-chip" id="chipFile" onclick="triggerFileInput('file')">📁 File</div>
             </div>
 
             <button class="submit-post-btn" onclick="submitPost()">Post</button>
@@ -430,8 +439,11 @@
     </div>
 
     <script>
-        let selectedMediaType = "";
+        let attachedMediaFile = null;
+        let attachedMediaType = "";
+        let attachedMediaUrl = "";
         let isLiveActive = false;
+        let mediaStreamObj = null;
 
         function openModule(name, desc) {
             document.getElementById('modalTitle').textContent = name;
@@ -442,30 +454,58 @@
             document.getElementById('moduleModal').style.display = 'none';
         }
 
-        function selectMedia(type) {
-            selectedMediaType = type;
-            document.querySelectorAll('.action-chip').forEach(c => c.classList.remove('selected'));
-            if(type.includes('Photo')) document.getElementById('chipPhoto').classList.add('selected');
-            if(type.includes('Video')) document.getElementById('chipVideo').classList.add('selected');
-            if(type.includes('File')) document.getElementById('chipFile').classList.add('selected');
-            alert(`${type} attached successfully. Now click Post.`);
+        function triggerFileInput(type) {
+            if(type === 'photo') {
+                document.getElementById('photoInput').click();
+            } else if(type === 'video') {
+                document.getElementById('videoInput').click();
+            } else if(type === 'file') {
+                document.getElementById('fileInput').click();
+            }
         }
 
-        function toggleLive() {
+        function handleFileSelected(event, type) {
+            const file = event.target.files[0];
+            if(!file) return;
+
+            attachedMediaFile = file;
+            attachedMediaType = type;
+            attachedMediaUrl = URL.createObjectURL(file);
+
+            document.querySelectorAll('.action-chip').forEach(c => c.classList.remove('selected'));
+            if(type === 'photo') document.getElementById('chipPhoto').classList.add('selected');
+            if(type === 'video') document.getElementById('chipVideo').classList.add('selected');
+            if(type === 'file') document.getElementById('chipFile').classList.add('selected');
+
+            alert(`✅ ${file.name} attached successfully! Click Post to share.`);
+        }
+
+        async function toggleLive() {
             const btn = document.getElementById('liveToggleBtn');
             const liveBox = document.getElementById('liveViewBox');
+            const videoElem = document.getElementById('liveVideoElement');
             isLiveActive = !isLiveActive;
 
             if(isLiveActive) {
-                btn.textContent = "⏹️ End Live";
-                btn.classList.add('active');
-                liveBox.style.display = 'block';
-                alert('🔴 Live stream started! Followers have been notified.');
+                try {
+                    mediaStreamObj = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                    videoElem.srcObject = mediaStreamObj;
+                    
+                    btn.textContent = "⏹️ End Live";
+                    btn.classList.add('active');
+                    liveBox.style.display = 'block';
+                } catch(err) {
+                    alert("⚠️ Camera/Microphone access was denied or not supported on this browser.");
+                    isLiveActive = false;
+                }
             } else {
+                if(mediaStreamObj) {
+                    mediaStreamObj.getTracks().forEach(track => track.stop());
+                }
+                videoElem.srcObject = null;
                 btn.textContent = "🔴 Go Live";
                 btn.classList.remove('active');
                 liveBox.style.display = 'none';
-                alert('⏹️ Live stream ended.');
             }
         }
 
@@ -513,8 +553,8 @@
 
         function submitPost() {
             const val = document.getElementById('postInput').value.trim();
-            if(!val && !selectedMediaType) {
-                alert('Please enter text or select a file to post!');
+            if(!val && !attachedMediaFile) {
+                alert('Please enter text or select a photo/video/file to post!');
                 return;
             }
             
@@ -522,14 +562,22 @@
             const newPost = document.createElement('div');
             newPost.className = 'feed-card';
             
-            let mediaText = selectedMediaType ? `<br><small style="color:#ff6b00;">📎 [Attached: ${selectedMediaType}]</small>` : '';
+            let mediaHtml = '';
+            if(attachedMediaType === 'photo' && attachedMediaUrl) {
+                mediaHtml = `<img src="${attachedMediaUrl}" class="feed-media-preview">`;
+            } else if(attachedMediaType === 'video' && attachedMediaUrl) {
+                mediaHtml = `<video src="${attachedMediaUrl}" controls class="feed-media-preview"></video>`;
+            } else if(attachedMediaType === 'file' && attachedMediaFile) {
+                mediaHtml = `<div style="font-size:0.75rem; color:#ff6b00;">📁 File: ${attachedMediaFile.name}</div>`;
+            }
 
             newPost.innerHTML = `
                 <div class="feed-user-info">
                     <span class="feed-username">Melese Yimane (You)</span>
                     <button class="follow-btn" onclick="toggleFollow(this)">Follow</button>
                 </div>
-                <div class="feed-text">${val} ${mediaText}</div>
+                <div class="feed-text">${val}</div>
+                ${mediaHtml}
                 <div class="feed-interactions">
                     <span class="interaction-action" onclick="likePost(this)">❤️ <span class="like-count">0</span> Likes</span>
                     <span class="interaction-action" onclick="openCommentBox(this)">💬 Comment</span>
@@ -542,7 +590,9 @@
             
             alert('Your post has been published to LOOP Family!');
             document.getElementById('postInput').value = '';
-            selectedMediaType = "";
+            attachedMediaFile = null;
+            attachedMediaType = "";
+            attachedMediaUrl = "";
             document.querySelectorAll('.action-chip').forEach(c => c.classList.remove('selected'));
         }
     </script>
