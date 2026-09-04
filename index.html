@@ -20,7 +20,7 @@
             min-height: 100vh;
         }
 
-        /* 1. የስፕላሽ ስክሪን ስታይል (Splash Screen) */
+        /* 1. የስፕላሽ ስክሪን ስታይል (Splash Screen & Spinner) */
         #splash-screen {
             position: fixed;
             top: 0;
@@ -36,25 +36,35 @@
             transition: opacity 0.5s ease;
         }
 
-        .loader-logo {
-            width: 140px;
-            height: 140px;
+        .spinner-box {
+            width: 110px;
+            height: 110px;
             border-radius: 50%;
-            object-fit: cover;
-            animation: spinPulse 2s infinite ease-in-out;
-            box-shadow: 0 0 20px rgba(78, 204, 163, 0.4);
+            border: 4px solid #1f2937;
+            border-top-color: #4ecca3;
+            animation: spin 1s linear infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(78, 204, 163, 0.3);
         }
 
-        @keyframes spinPulse {
-            0% { transform: scale(0.9) rotate(0deg); opacity: 0.8; }
-            50% { transform: scale(1.1) rotate(180deg); opacity: 1; border: 3px solid #4ecca3; }
-            100% { transform: scale(0.9) rotate(360deg); opacity: 0.8; }
+        .spinner-text-inner {
+            font-size: 14px;
+            font-weight: bold;
+            color: #4ecca3;
+            letter-spacing: 1px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .loader-text {
             margin-top: 20px;
-            font-size: 18px;
-            letter-spacing: 2px;
+            font-size: 16px;
+            letter-spacing: 1px;
             color: #4ecca3;
             font-weight: bold;
         }
@@ -120,9 +130,11 @@
 </head>
 <body>
 
-    <!-- የስፕላሽ ስክሪን (በሎጎ እና ሽክርክሪት) -->
+    <!-- የስፕላሽ ስክሪን (በ 2 ሰከንድ ሰዓት ማስተካከያ) -->
     <div id="splash-screen">
-        <img src="21185.png" alt="LOOP Logo" class="loader-logo">
+        <div class="spinner-box">
+            <span class="spinner-text-inner">LOOP</span>
+        </div>
         <div class="loader-text">LOOP Super App በመጫን ላይ...</div>
     </div>
 
@@ -131,6 +143,7 @@
         <!-- የሎግኢን ካርድ -->
         <div id="auth-card" class="card">
             <h3 style="margin-top: 0; color: #60a5fa;">🔐 LOOP ደህንነቱ የተጠበቀ መግቢያ</h3>
+            
             <div id="auth-form">
                 <input type="email" id="auth-email" placeholder="ኢሜልዎን ያስገቡ" />
                 <input type="password" id="auth-password" placeholder="ሚስጥር ቁጥር (Password)" />
@@ -144,6 +157,7 @@
                 <button class="btn-success" onclick="handleSignup()">አካውንት ክፈት (Sign Up)</button>
             </div>
 
+            <!-- ተጠቃሚው ከገባ በኋላ የሚታይ -->
             <div id="user-info" style="display: none;">
                 <p>እንኳን ደህና መጡ: <span id="user-email-display" style="color: #34d399; font-weight: bold;"></span></p>
                 <button class="btn-danger" onclick="handleLogout()">ውጣ (Sign Out)</button>
@@ -160,7 +174,7 @@
     </div>
 
     <script>
-        // Supabase ማዋቀሪያ (የእርስዎን ማስገቢያ ቁልፎች ያስገቡ)
+        // Supabase ማዋቀሪያ (እባክዎ የသင့်ን ዩአል እና አኖን ኪ [URL & Anon Key] እዚህ ያስገቡ)
         const SUPABASE_URL = 'YOUR_SUPABASE_URL';
         const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -182,7 +196,6 @@
 
         // 2. የተጠቃሚውን ስሺን ማረጋገጥ (Remember Me Logic)
         async function checkExistingSession() {
-            // መጀመሪያ ከ LocalStorage ማረጋገጥ
             const savedUser = localStorage.getItem('loop_user_session');
             const { data: { session } } = await supabase.auth.getSession();
 
@@ -213,9 +226,8 @@
                 alert("መግባት አልተቻለም: " + error.message);
             } else {
                 alert("በሰላም ገብተዋል!");
-                // ሎግኢን እንዳይጠይቅ ሴቭ ማድረግ ከተመረጠ
                 if (rememberMe) {
-                    localStorage.setItem('loop_user_session', JSON.stringify({ email: data.user.email }));
+                    localStorage.setItem('loop_user_session', JSON.stringify({ id: data.user.id, email: data.user.email }));
                 }
                 location.reload();
             }
@@ -242,12 +254,12 @@
         // 5. ከሲስተሙ መውጣት (Sign Out)
         async function handleLogout() {
             await supabase.auth.signOut();
-            localStorage.removeItem('loop_user_session'); // ሴቭ የተደረገውን ማጥፋት
+            localStorage.removeItem('loop_user_session');
             alert("ወጥተዋል!");
             location.reload();
         }
 
-        // 6. ጥብቅ የደህንነት መስፈርትን ጠብቆ ፖስት ማድረግ
+        // 6. ጥብቅ የደህንነት መስፈርትን ጠብቆ ፖስት ማድረግ (Strict RLS)
         async function submitPost() {
             const { data: { user } } = await supabase.auth.getUser();
             const savedUser = localStorage.getItem('loop_user_session');
@@ -279,7 +291,6 @@
                     return;
                 }
 
-                // የፋይሉን ፐብሊክ ሊንክ ማግኘት
                 const { data: publicUrlData } = supabase.storage
                     .from('post-media')
                     .getPublicUrl(fileName);
@@ -287,9 +298,10 @@
                 mediaUrl = publicUrlData.publicUrl;
             }
 
-            // ዳታቤዝ ላይ ፖስቱን ከ user_id ጋር ማስቀመጥ
+            // የዩዘር ID ማግኘት
             const userId = user ? user.id : JSON.parse(savedUser).id;
 
+            // ዳታቤዝ ላይ ፖስቱን በደህንነት ፖሊሲ ማስቀመጥ
             const { error: postError } = await supabase
                 .from('posts')
                 .insert([{ content: content, media_url: mediaUrl, user_id: userId }]);
