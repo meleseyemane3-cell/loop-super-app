@@ -14,8 +14,8 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         body {
-            background-color: #f0f2f5;
-            color: #333;
+            background-color: #121212;
+            color: #e0e0e0;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -24,36 +24,46 @@
         .app-container {
             width: 100%;
             max-width: 480px;
-            background: #fff;
+            background: #1e1e1e;
             min-height: 100vh;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
             display: flex;
             flex-direction: column;
+            position: relative;
         }
         header {
             padding: 15px 20px;
-            background: #4f46e5;
+            background: #6200ee;
             color: white;
             font-size: 20px;
             font-weight: bold;
             text-align: center;
+            letter-spacing: 1px;
         }
         .content {
             flex: 1;
             padding: 15px;
             overflow-y: auto;
+            padding-bottom: 70px;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
         }
         .post-box {
-            background: #fff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            background: #2d2d2d;
+            border: 1px solid #444;
+            border-radius: 10px;
             padding: 12px;
             margin-bottom: 15px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
         .post-box textarea {
             width: 100%;
-            border: 1px solid #ccc;
+            background: #1e1e1e;
+            color: #fff;
+            border: 1px solid #555;
             border-radius: 6px;
             padding: 10px;
             resize: none;
@@ -62,7 +72,7 @@
             margin-bottom: 10px;
         }
         .post-box textarea:focus {
-            border-color: #4f46e5;
+            border-color: #6200ee;
         }
         .post-actions {
             display: flex;
@@ -70,10 +80,11 @@
             align-items: center;
         }
         .post-actions input[type="file"] {
-            font-size: 12px;
+            font-size: 11px;
+            color: #aaa;
         }
         button {
-            background: #4f46e5;
+            background: #6200ee;
             color: white;
             border: none;
             padding: 8px 16px;
@@ -82,15 +93,12 @@
             font-weight: bold;
         }
         button:hover {
-            background: #4338ca;
-        }
-        .feed {
-            margin-top: 20px;
+            background: #3700b3;
         }
         .card {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
+            background: #2d2d2d;
+            border: 1px solid #444;
+            border-radius: 10px;
             padding: 12px;
             margin-bottom: 12px;
         }
@@ -98,6 +106,7 @@
             font-size: 14px;
             margin-bottom: 8px;
             word-break: break-word;
+            color: #f5f5f5;
         }
         .card img, .card video {
             width: 100%;
@@ -112,18 +121,53 @@
             align-items: center;
             margin-top: 10px;
             font-size: 12px;
-            color: #666;
+            color: #aaa;
         }
         .like-btn {
             background: transparent;
-            color: #4f46e5;
-            border: 1px solid #4f46e5;
+            color: #bb86fc;
+            border: 1px solid #bb86fc;
             padding: 4px 10px;
             font-size: 12px;
         }
         .like-btn:hover {
-            background: #4f46e5;
-            color: white;
+            background: #bb86fc;
+            color: #121212;
+        }
+        /* Bottom Navigation Bar */
+        .nav-bar {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 60px;
+            background: #1a1a1a;
+            border-top: 1px solid #333;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        .nav-item {
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .nav-item.active {
+            color: #bb86fc;
+        }
+        .nav-item span {
+            font-size: 18px;
+            margin-bottom: 2px;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #bb86fc;
         }
     </style>
 </head>
@@ -133,31 +177,89 @@
         <header>LOOP Super App</header>
         
         <div class="content">
-            <!-- Post Creation Box -->
-            <div class="post-box">
-                <textarea id="postContent" rows="3" placeholder="ምን እየተሰማዎት ነው? ሐሳብዎን ያካፍሉ..."></textarea>
-                <div class="post-actions">
-                    <input type="file" id="mediaFile" accept="image/*,video/*">
-                    <button onclick="createPost()">ለጥፍ (Post)</button>
+            <!-- 1. Home / Feed Tab -->
+            <div id="homeTab" class="tab-content active">
+                <div class="post-box">
+                    <textarea id="postContent" rows="3" placeholder="What's on your mind? Share with LOOP..."></textarea>
+                    <div class="post-actions">
+                        <input type="file" id="mediaFile" accept="image/*,video/*">
+                        <button onclick="createPost()">Post</button>
+                    </div>
+                </div>
+                <div class="feed" id="postsFeed">
+                    <p style="text-align: center; color: #888;">Loading posts...</p>
                 </div>
             </div>
 
-            <!-- Posts Feed -->
-            <div class="feed" id="postsFeed">
-                <p style="text-align: center; color: #777;">ፖስቶች በመጫን ላይ...</p>
+            <!-- 2. Explore Tab -->
+            <div id="exploreTab" class="tab-content">
+                <div class="section-title">Explore Trending</div>
+                <div class="card">
+                    <p>🔥 Trending in LOOP: Super App v2.0 update is live with Supabase database integration!</p>
+                </div>
+                <div class="card">
+                    <p>🚀 Discover new creators, developers, and tech trends today.</p>
+                </div>
+            </div>
+
+            <!-- 3. Messages Tab -->
+            <div id="messagesTab" class="tab-content">
+                <div class="section-title">Messages</div>
+                <div class="card">
+                    <p><strong>System Bot:</strong> Welcome to LOOP Super App! Enjoy connecting with your community.</p>
+                </div>
+            </div>
+
+            <!-- 4. Profile Tab -->
+            <div id="profileTab" class="tab-content">
+                <div class="section-title">My Profile</div>
+                <div class="card" style="text-align: center;">
+                    <h3 style="color: #fff; margin-bottom: 5px;">מለሰ ይማነ</h3>
+                    <p style="color: #aaa; font-size: 13px;">LOOP Super App Creator & Developer</p>
+                    <button style="margin-top: 10px;" onclick="alert('Profile settings coming soon!')">Edit Profile</button>
+                </div>
             </div>
         </div>
+
+        <!-- Bottom Navigation Bar -->
+        <nav class="nav-bar">
+            <button class="nav-item active" onclick="switchTab('homeTab', this)">
+                <span>🏠</span> Home
+            </button>
+            <button class="nav-item" onclick="switchTab('exploreTab', this)">
+                <span>🔍</span> Explore
+            </button>
+            <button class="nav-item" onclick="switchTab('messagesTab', this)">
+                <span>💬</span> Chats
+            </button>
+            <button class="nav-item" onclick="switchTab('profileTab', this)">
+                <span>👤</span> Profile
+            </button>
+        </nav>
     </div>
 
     <script>
-        // Supabase Credentials (የእርስዎን Supabase URL እና Anon Key እዚህ ያስገቡ)
+        // Supabase Credentials (የእርስዎን የ Supabase URL እና Anon Key እዚህ ያስገቡ)
         const SUPABASE_URL = 'YOUR_SUPABASE_URL';
         const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
         const { createClient } = supabase;
         const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // ፖስቶችን ከዳታቤዝ አምጥቶ ማሳየት
+        // Tab Switching Logic
+        function switchTab(tabId, btnElement) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-item').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            document.getElementById(tabId).classList.add('active');
+            btnElement.classList.add('active');
+        }
+
+        // Fetch posts from Supabase database
         async function fetchPosts() {
             const feed = document.getElementById('postsFeed');
             
@@ -168,12 +270,12 @@
 
             if (error) {
                 console.error('Error fetching posts:', error);
-                feed.innerHTML = '<p style="text-align: center; color: red;">ፖስቶችን ማምጣት አልተቻለም።</p>';
+                feed.innerHTML = '<p style="text-align: center; color: #ff5555;">Failed to load posts.</p>';
                 return;
             }
 
             if (data.length === 0) {
-                feed.innerHTML = '<p style="text-align: center; color: #777;">ምንም ፖስቶች የሉም። የመጀመሪያውን ፖስት ያድርጉ!</p>';
+                feed.innerHTML = '<p style="text-align: center; color: #888;">No posts yet. Be the first to share something!</p>';
                 return;
             }
 
@@ -195,31 +297,29 @@
                     ${mediaElement}
                     <div class="card-footer">
                         <span>${new Date(post.created_at).toLocaleString()}</span>
-                        <button class="like-btn" onclick="likePost(${post.id}, ${post.likes || 0})">❤️ ውደድ (${post.likes || 0})</button>
+                        <button class="like-btn" onclick="likePost(${post.id}, ${post.likes || 0})">❤️ Like (${post.likes || 0})</button>
                     </div>
                 `;
                 feed.appendChild(card);
             });
         }
 
-        // አዲስ ፖስት መፍጠር
+        // Create new post
         async function createPost() {
             const contentText = document.getElementById('postContent').value.trim();
             const fileInput = document.getElementById('mediaFile');
             const file = fileInput.files[0];
 
             if (!contentText && !file) {
-                alert('እባክዎ ጽሁፍ ወይም ፎቶ/ቪዲዮ ያስገቡ!');
+                alert('Please enter text or select a file to post!');
                 return;
             }
 
             let mediaUrl = null;
             let mediaType = null;
 
-            // ፋይል ካለ ወደ Supabase Storage መጫን ይቻላል (ወይም ለጊዜው በባዶ መተው)
             if (file) {
                 mediaType = file.type.startsWith('video') ? 'video' : 'image';
-                // (ማስታወሻ: ፋይል ለማስቀመጥ Storage Bucket መፍጠር ያስፈልጋል፣ ለአሁን በፅሁፍ እናስቀድም)
             }
 
             const { error } = await _supabase
@@ -234,7 +334,7 @@
                 ]);
 
             if (error) {
-                alert('ፖስት ማድረግ አልተቻለም: ' + error.message);
+                alert('Failed to post: ' + error.message);
                 console.error(error);
             } else {
                 document.getElementById('postContent').value = '';
@@ -243,7 +343,7 @@
             }
         }
 
-        // ላይክ መጨመር
+        // Like post function
         async function likePost(postId, currentLikes) {
             const { error } = await _supabase
                 .from('posts')
@@ -266,7 +366,7 @@
             return text.replace(/[&<>"']/g, m => map[m]);
         }
 
-        // ገጹ ሲከፈት ፖስቶችን መጫን
+        // Load posts on page startup
         fetchPosts();
     </script>
 </body>
