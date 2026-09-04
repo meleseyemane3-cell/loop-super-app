@@ -1,487 +1,851 @@
 <!DOCTYPE html>
 <html lang="am">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LOOP Super App</title>
-    <!-- Supabase CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        body {
-            background-color: #0b0f19;
-            color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .app-container {
-            width: 100%;
-            max-width: 480px;
-            background: #0f172a;
-            min-height: 100vh;
-            box-shadow: 0 0 20px rgba(0,0,0,0.8);
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            border: 1px solid #1e293b;
-        }
-        header {
-            padding: 18px 20px;
-            background: #0f172a;
-            color: #38bdf8;
-            font-size: 22px;
-            font-weight: bold;
-            text-align: center;
-            border-bottom: 1px solid #1e293b;
-            letter-spacing: 0.5px;
-        }
-        .content {
-            flex: 1;
-            padding: 15px;
-            overflow-y: auto;
-            padding-bottom: 30px;
-        }
-        /* Features Grid */
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        .feature-btn {
-            background: #1e293b;
-            border: 1px solid #334155;
-            color: #f8fafc;
-            padding: 12px 8px;
-            border-radius: 12px;
-            font-size: 13px;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            transition: 0.2s;
-        }
-        .feature-btn:hover {
-            background: #334155;
-            border-color: #38bdf8;
-        }
-        .feature-btn span {
-            font-size: 18px;
-        }
-        /* Wallet/Profile Bar */
-        .wallet-card {
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 12px 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        .balance-badge {
-            background: #0284c7;
-            color: white;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 14px;
-        }
-        .phone-num {
-            color: #cbd5e1;
-            font-size: 14px;
-            font-weight: 500;
-        }
-        .add-card-btn {
-            background: transparent;
-            border: 1px solid #475569;
-            color: #38bdf8;
-            padding: 6px 10px;
-            border-radius: 8px;
-            font-size: 12px;
-            cursor: pointer;
-        }
-        /* LOOP Family Post Box */
-        .post-box {
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-        .post-box-title {
-            font-size: 16px;
-            font-weight: bold;
-            color: #38bdf8;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .post-box textarea {
-            width: 100%;
-            background: #0f172a;
-            color: #fff;
-            border: 1px solid #334155;
-            border-radius: 8px;
-            padding: 12px;
-            resize: none;
-            font-size: 14px;
-            outline: none;
-            margin-bottom: 12px;
-        }
-        .post-box textarea:focus {
-            border-color: #38bdf8;
-        }
-        .post-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-        .action-chip {
-            background: #0f172a;
-            border: 1px solid #334155;
-            color: #cbd5e1;
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .action-chip:hover {
-            border-color: #38bdf8;
-            color: #38bdf8;
-        }
-        .submit-post-btn {
-            width: 100%;
-            background: #0284c7;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 15px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .submit-post-btn:hover {
-            background: #0369a1;
-        }
-        /* Feed Cards */
-        .card {
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
-        }
-        .card p {
-            font-size: 14px;
-            margin-bottom: 10px;
-            word-break: break-word;
-            color: #f8fafc;
-            line-height: 1.5;
-        }
-        .card img, .card video, .card audio {
-            width: 100%;
-            border-radius: 8px;
-            max-height: 300px;
-            object-fit: cover;
-            margin-top: 8px;
-        }
-        .card-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 12px;
-            font-size: 12px;
-            color: #94a3b8;
-            border-top: 1px solid #334155;
-            padding-top: 10px;
-        }
-        .like-btn {
-            background: transparent;
-            color: #38bdf8;
-            border: 1px solid #38bdf8;
-            padding: 5px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .like-btn:hover {
-            background: #38bdf8;
-            color: #0f172a;
-        }
-        #recordingStatus {
-            font-size: 12px;
-            color: #f43f5e;
-            margin-bottom: 8px;
-            display: none;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LOOP Family Super App</title>
+
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, "Noto Sans Ethiopic", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: #0b1120;
+      color: #f8fafc;
+      display: flex;
+      justify-content: center;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 520px;
+      min-height: 100vh;
+      background: #0f172a;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      padding: 18px;
+      text-align: center;
+      background: #0f172a;
+      color: #38bdf8;
+      border-bottom: 1px solid #1e293b;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    main {
+      padding: 15px;
+    }
+
+    .panel,
+    .post-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 14px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+
+    .panel-title {
+      color: #38bdf8;
+      font-size: 17px;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 90px;
+      resize: vertical;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #475569;
+      outline: none;
+      background: #0f172a;
+      color: #fff;
+      font-size: 15px;
+    }
+
+    textarea:focus {
+      border-color: #38bdf8;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 12px 0;
+    }
+
+    .tool-btn,
+    .like-btn {
+      border: 1px solid #475569;
+      border-radius: 9px;
+      background: #0f172a;
+      color: #cbd5e1;
+      padding: 9px 11px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .tool-btn:hover,
+    .like-btn:hover {
+      color: #38bdf8;
+      border-color: #38bdf8;
+    }
+
+    .publish-btn {
+      width: 100%;
+      border: none;
+      border-radius: 9px;
+      background: #0284c7;
+      color: #fff;
+      padding: 12px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    .publish-btn:hover {
+      background: #0369a1;
+    }
+
+    .publish-btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .status {
+      min-height: 20px;
+      margin: 5px 0 10px;
+      color: #38bdf8;
+      font-size: 12px;
+    }
+
+    .error {
+      color: #f87171;
+    }
+
+    .empty {
+      padding: 25px 10px;
+      text-align: center;
+      color: #94a3b8;
+    }
+
+    .post-content {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      line-height: 1.6;
+      color: #f8fafc;
+    }
+
+    .post-media {
+      width: 100%;
+      max-height: 360px;
+      object-fit: cover;
+      margin-top: 12px;
+      border-radius: 10px;
+      background: #020617;
+    }
+
+    .post-audio {
+      width: 100%;
+      margin-top: 12px;
+    }
+
+    .post-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-top: 13px;
+      padding-top: 10px;
+      border-top: 1px solid #334155;
+      color: #94a3b8;
+      font-size: 11px;
+    }
+
+    .live-label {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 3px 7px;
+      border-radius: 5px;
+      background: #dc2626;
+      color: #fff;
+      font-size: 10px;
+      font-weight: bold;
+    }
+
+    .selected-file {
+      color: #cbd5e1;
+      font-size: 12px;
+      margin-top: 8px;
+      overflow-wrap: anywhere;
+    }
+
+    .connection {
+      margin-bottom: 12px;
+      color: #94a3b8;
+      font-size: 11px;
+      text-align: center;
+    }
+
+    @media (max-width: 400px) {
+      main {
+        padding: 10px;
+      }
+
+      .panel,
+      .post-card {
+        padding: 12px;
+      }
+
+      .post-footer {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
+
 <body>
+  <div class="app">
+    <header>👥 LOOP Family</header>
 
-    <div class="app-container">
-        <header>LOOP Super App</header>
-        
-        <div class="content">
-            <!-- Features Grid -->
-            <div class="features-grid">
-                <button class="feature-btn" onclick="alert('ጉዞ (Travel) feature coming soon!')"><span>✈️</span> ጉዞ</button>
-                <button class="feature-btn" onclick="alert('ስፖርት (Sports) feature coming soon!')"><span>⚽</span> ስፖርት</button>
-                <button class="feature-btn" onclick="alert('ቻት (Chat) feature coming soon!')"><span>💬</span> ቻት</button>
-                <button class="feature-btn" onclick="alert('AI ረዳት (AI Assistant) feature coming soon!')"><span>🤖</span> AI ረዳት</button>
-                <button class="feature-btn" onclick="alert('ዜና (News) feature coming soon!')"><span>📖</span> ዜና</button>
-                <button class="feature-btn" onclick="alert('ዋሌት (Wallet) feature coming soon!')"><span>💰</span> ዋሌት</button>
-            </div>
+    <main>
+      <div id="connectionStatus" class="connection">
+        Realtime በመገናኘት ላይ...
+      </div>
 
-            <!-- Wallet/Account Bar -->
-            <div class="wallet-card">
-                <div class="balance-badge">0 ETB</div>
-                <div class="phone-num">0921324328</div>
-                <button class="add-card-btn" onclick="alert('Add card clicked')">+ አድ 💳 ካርድ</button>
-            </div>
+      <section class="panel">
+        <div class="panel-title">አዲስ ፖስት ያድርጉ</div>
 
-            <!-- LOOP Family Post Box -->
-            <div class="post-box">
-                <div class="post-box-title">👥 LOOP Family</div>
-                <textarea id="postContent" rows="3" placeholder="ምን እየተሰማዎት ነው?"></textarea>
-                <div id="recordingStatus">🔴 ድምጽ በመቅዳት ላይ... (ማቆሚያውን እንደገና ይጫኑ)</div>
-                <div class="post-actions">
-                    <label class="action-chip">
-                        <span>📷</span> ፎቶ/ቪዲዮ <input type="file" id="mediaFile" accept="image/*,video/*" style="display: none;" onchange="fileSelected(this)">
-                    </label>
-                    <button type="button" class="action-chip" id="voiceBtn" onclick="toggleVoiceRecording()">
-                        <span>🎙️</span> <span id="voiceText">ድምጽ</span>
-                    </button>
-                </div>
-                <div id="selectedFileName" style="font-size: 11px; color: #38bdf8; margin-bottom: 8px;"></div>
-                <button class="submit-post-btn" id="submitBtn" onclick="createPost()">ለፖረው</button>
-            </div>
+        <textarea
+          id="postContent"
+          placeholder="ምን እየተሰማዎት ነው?"
+        ></textarea>
 
-            <!-- Posts Feed -->
-            <div class="feed" id="postsFeed">
-                <p style="text-align: center; color: #94a3b8;">ፖስቶች በመጫን ላይ...</p>
-            </div>
+        <div id="selectedFile" class="selected-file"></div>
+        <div id="statusMessage" class="status"></div>
+
+        <div class="toolbar">
+          <label class="tool-btn">
+            📷 ፎቶ/ቪዲዮ
+            <input
+              id="mediaFile"
+              type="file"
+              accept="image/*,video/*"
+              hidden
+            />
+          </label>
+
+          <button id="voiceBtn" class="tool-btn" type="button">
+            🎙️ <span id="voiceText">ድምጽ</span>
+          </button>
+
+          <button id="liveBtn" class="tool-btn" type="button">
+            🔴 <span id="liveText">ላይቭ</span>
+          </button>
         </div>
-    </div>
 
-    <script>
-        // Supabase Credentials (እርስዎን የ Supabase URL እና Anon Key እዚህ ያስገቡ)
-        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+        <button id="publishBtn" class="publish-btn" type="button">
+          ፖስት አድርግ
+        </button>
+      </section>
 
-        const { createClient } = supabase;
-        const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      <section id="postsContainer"></section>
+    </main>
+  </div>
 
-        let mediaRecorder;
-        let audioChunks = [];
-        let recordedAudioBlob = null;
+  <script>
+    // የ Supabase ትክክለኛ መረጃዎች
+    const SUPABASE_URL = 'https://chmwdtxktrezasgbbvjr.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_QQAtpXYe2IQqmvpFrRyBXg_GWpnnQqc';
 
-        function fileSelected(input) {
-            const fileNameDiv = document.getElementById('selectedFileName');
-            if (input.files && input.files[0]) {
-                fileNameDiv.textContent = "የተመረጠ ፋይል: " + input.files[0].name;
-                recordedAudioBlob = null; // ፎቶ ሲመረጥ የድምጽ ሬኮርዱን ባዶ እናደርገዋለን
-            }
+    const supabaseClient = supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY
+    );
+
+    const postContent = document.getElementById('postContent');
+    const mediaFile = document.getElementById('mediaFile');
+    const selectedFile = document.getElementById('selectedFile');
+    const statusMessage = document.getElementById('statusMessage');
+    const postsContainer = document.getElementById('postsContainer');
+    const publishBtn = document.getElementById('publishBtn');
+    const voiceBtn = document.getElementById('voiceBtn');
+    const liveBtn = document.getElementById('liveBtn');
+    const voiceText = document.getElementById('voiceText');
+    const liveText = document.getElementById('liveText');
+    const connectionStatus = document.getElementById('connectionStatus');
+
+    let mediaRecorder = null;
+    let mediaStream = null;
+    let recordedChunks = [];
+    let recordedAudioBlob = null;
+    let liveVideoBlob = null;
+
+    function setStatus(message, isError = false) {
+      statusMessage.textContent = message;
+      statusMessage.className = isError
+        ? 'status error'
+        : 'status';
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, character => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      }[character]));
+    }
+
+    function safeMediaUrl(value) {
+      try {
+        const url = new URL(value);
+
+        if (url.protocol !== 'https:') {
+          return '';
         }
 
-        // ድምጽ የመቅዳት ተግባር (Voice Recording)
-        async function toggleVoiceRecording() {
-            const voiceText = document.getElementById('voiceText');
-            const recordingStatus = document.getElementById('recordingStatus');
-            const fileNameDiv = document.getElementById('selectedFileName');
+        return escapeHtml(url.href);
+      } catch {
+        return '';
+      }
+    }
 
-            if (!mediaRecorder || mediaRecorder.state === "inactive") {
-                try {
-                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                    mediaRecorder = new MediaRecorder(stream);
-                    audioChunks = [];
+    function getBestMimeType(type) {
+      const audioTypes = [
+        'audio/webm;codecs=opus',
+        'audio/webm',
+        'audio/ogg;codecs=opus'
+      ];
 
-                    mediaRecorder.ondataavailable = event => {
-                        audioChunks.push(event.data);
-                    };
+      const videoTypes = [
+        'video/webm;codecs=vp8,opus',
+        'video/webm',
+        'video/mp4'
+      ];
 
-                    mediaRecorder.onstop = () => {
-                        recordedAudioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
-                        fileNameDiv.textContent = "የተቀዳ ድምጽ ዝግጁ ነው (Voice Ready)";
-                        document.getElementById('mediaFile').value = ''; // ፋይል ሰሌክቱን እናጠፋለን
-                    };
+      const types = type === 'audio'
+        ? audioTypes
+        : videoTypes;
 
-                    mediaRecorder.start();
-                    voiceText.textContent = "አቁም";
-                    recordingStatus.style.display = "block";
-                } catch (err) {
-                    alert('ማይክሮፎን መጠቀም አልተቻለም: ' + err.message);
-                }
-            } else {
-                mediaRecorder.stop();
-                voiceText.textContent = "ድምጽ";
-                recordingStatus.style.display = "none";
-            }
+      if (!window.MediaRecorder) {
+        return '';
+      }
+
+      return types.find(
+        mimeType => MediaRecorder.isTypeSupported(mimeType)
+      ) || '';
+    }
+
+    function stopStream() {
+      if (mediaStream) {
+        mediaStream.getTracks().forEach(track => track.stop());
+        mediaStream = null;
+      }
+    }
+
+    mediaFile.addEventListener('change', () => {
+      recordedAudioBlob = null;
+      liveVideoBlob = null;
+
+      if (mediaFile.files && mediaFile.files[0]) {
+        selectedFile.textContent =
+          'የተመረጠ ፋይል: ' + mediaFile.files[0].name;
+      } else {
+        selectedFile.textContent = '';
+      }
+    });
+
+    voiceBtn.addEventListener('click', async () => {
+      if (mediaRecorder && mediaRecorder.state === 'recording') {
+        mediaRecorder.stop();
+        voiceText.textContent = 'ድምጽ';
+        return;
+      }
+
+      try {
+        recordedAudioBlob = null;
+        liveVideoBlob = null;
+        mediaFile.value = '';
+        selectedFile.textContent = '';
+
+        mediaStream = await navigator.mediaDevices.getUserMedia({
+          audio: true
+        });
+
+        const mimeType = getBestMimeType('audio');
+
+        mediaRecorder = mimeType
+          ? new MediaRecorder(mediaStream, { mimeType })
+          : new MediaRecorder(mediaStream);
+
+        recordedChunks = [];
+
+        mediaRecorder.ondataavailable = event => {
+          if (event.data && event.data.size > 0) {
+            recordedChunks.push(event.data);
+          }
+        };
+
+        mediaRecorder.onstop = () => {
+          const actualType =
+            mediaRecorder.mimeType || 'audio/webm';
+
+          recordedAudioBlob = new Blob(recordedChunks, {
+            type: actualType
+          });
+
+          stopStream();
+          setStatus('የተቀዳ ድምጽ ዝግጁ ነው።');
+          voiceText.textContent = 'ድምጽ';
+        };
+
+        mediaRecorder.start();
+        voiceText.textContent = 'አቁም';
+        setStatus('🔴 ድምጽ በመቅዳት ላይ...');
+
+      } catch (error) {
+        stopStream();
+        console.error(error);
+        setStatus('ማይክሮፎን መጠቀም አልተቻለም።', true);
+      }
+    });
+
+    liveBtn.addEventListener('click', async () => {
+      try {
+        recordedAudioBlob = null;
+        liveVideoBlob = null;
+        mediaFile.value = '';
+        selectedFile.textContent = '';
+
+        mediaStream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: true
+        });
+
+        const mimeType = getBestMimeType('video');
+
+        mediaRecorder = mimeType
+          ? new MediaRecorder(mediaStream, { mimeType })
+          : new MediaRecorder(mediaStream);
+
+        recordedChunks = [];
+
+        mediaRecorder.ondataavailable = event => {
+          if (event.data && event.data.size > 0) {
+            recordedChunks.push(event.data);
+          }
+        };
+
+        mediaRecorder.onstop = () => {
+          const actualType =
+            mediaRecorder.mimeType || 'video/webm';
+
+          liveVideoBlob = new Blob(recordedChunks, {
+            type: actualType
+          });
+
+          stopStream();
+          setStatus(
+            "🔴 ላይቭ ቪዲዮ ተቀርጿል። 'ፖስት አድርግ' ይጫኑ።"
+          );
+          liveText.textContent = 'ላይቭ';
+        };
+
+        mediaRecorder.start();
+        liveText.textContent = 'በመቅዳት ላይ';
+        setStatus(
+          '🔴 ላይቭ በመቅዳት ላይ... ከ6 ሰከንድ በኋላ ይቆማል።'
+        );
+
+        setTimeout(() => {
+          if (
+            mediaRecorder &&
+            mediaRecorder.state === 'recording'
+          ) {
+            mediaRecorder.stop();
+          }
+        }, 6000);
+
+      } catch (error) {
+        stopStream();
+        console.error(error);
+        setStatus(
+          'ካሜራ ወይም ማይክሮፎን መጠቀም አልተቻለም።',
+          true
+        );
+      }
+    });
+
+    function renderMedia(post) {
+      if (!post.media_url) {
+        return '';
+      }
+
+      const mediaUrl = safeMediaUrl(post.media_url);
+
+      if (!mediaUrl) {
+        return '';
+      }
+
+      if (post.media_type === 'image') {
+        return `
+          <img
+            class="post-media"
+            src="${mediaUrl}"
+            alt="LOOP Family media"
+            loading="lazy"
+          />
+        `;
+      }
+
+      if (
+        post.media_type === 'video' ||
+        post.media_type === 'live'
+      ) {
+        const liveLabel = post.media_type === 'live'
+          ? '<span class="live-label">LIVE RECORDING</span>'
+          : '';
+
+        return `
+          ${liveLabel}
+          <video
+            class="post-media"
+            src="${mediaUrl}"
+            controls
+            preload="metadata"
+          ></video>
+        `;
+      }
+
+      if (post.media_type === 'audio') {
+        return `
+          <audio
+            class="post-audio"
+            src="${mediaUrl}"
+            controls
+            preload="metadata"
+          ></audio>
+        `;
+      }
+
+      return '';
+    }
+
+    async function fetchPosts() {
+      try {
+        const { data, error } = await supabaseClient
+          .from('posts')
+          .select(
+            'id, content, media_url, media_type, likes, created_at'
+          )
+          .order('created_at', { ascending: false });
+
+        if (error) {
+          throw error;
         }
 
-        // ፖስቶችን ከዳታቤዝ ማምጣት
-        async function fetchPosts() {
-            const feed = document.getElementById('postsFeed');
-            
-            const { data, error } = await _supabase
-                .from('posts')
-                .select('*')
-                .order('created_at', { ascending: false });
+        postsContainer.innerHTML = '';
 
-            if (error) {
-                console.error('Error fetching posts:', error);
-                feed.innerHTML = '<p style="text-align: center; color: #f87171;">ፖስቶችን ማምጣት አልተቻለም።</p>';
-                return;
-            }
-
-            if (data.length === 0) {
-                feed.innerHTML = '<p style="text-align: center; color: #94a3b8;">ምንም ፖስቶች የሉም። የመጀመሪያውን ፖስት ያድርጉ!</p>';
-                return;
-            }
-
-            feed.innerHTML = '';
-            data.forEach(post => {
-                let mediaElement = '';
-                if (post.media_url) {
-                    if (post.media_type === 'video') {
-                        mediaElement = `<video src="${post.media_url}" controls></video>`;
-                    } else if (post.media_type === 'audio') {
-                        mediaElement = `<audio src="${post.media_url}" controls></audio>`;
-                    } else {
-                        mediaElement = `<img src="${post.media_url}" alt="Post Media">`;
-                    }
-                }
-
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    <p>${escapeHtml(post.content || '')}</p>
-                    ${mediaElement}
-                    <div class="card-footer">
-                        <span>${new Date(post.created_at).toLocaleString()}</span>
-                        <button class="like-btn" onclick="likePost(${post.id}, ${post.likes || 0})">❤️ ውደድ (${post.likes || 0})</button>
-                    </div>
-                `;
-                feed.appendChild(card);
-            });
+        if (!data || data.length === 0) {
+          postsContainer.innerHTML = `
+            <div class="empty">
+              ምንም ፖስት የለም። የመጀመሪያውን ፖስት ያድርጉ!
+            </div>
+          `;
+          return;
         }
 
-        // አዲስ ፖስት መፍጠር (ከፋይል ወይም ድምጽ ጋር ወደ Supabase Storage መጫን)
-        async function createPost() {
-            const contentText = document.getElementById('postContent').value.trim();
-            const fileInput = document.getElementById('mediaFile');
-            const file = fileInput.files[0];
-            const submitBtn = document.getElementById('submitBtn');
+        data.forEach(post => {
+          const postCard = document.createElement('article');
+          postCard.className = 'post-card';
 
-            if (!contentText && !file && !recordedAudioBlob) {
-                alert('እባክዎ ጽሁፍ፣ ፎቶ/ቪዲዮ ወይም የድምጽ ሬኮርድ ያስገቡ!');
-                return;
-            }
+          postCard.innerHTML = `
+            <div class="post-content">
+              ${escapeHtml(post.content || '')}
+            </div>
 
-            submitBtn.textContent = " በመጫን ላይ...";
-            submitBtn.disabled = true;
+            ${renderMedia(post)}
 
-            let mediaUrl = null;
-            let mediaType = null;
+            <div class="post-footer">
+              <span>
+                ${new Date(post.created_at)
+                  .toLocaleString('am-ET')}
+              </span>
 
-            try {
-                let uploadFile = null;
-                if (file) {
-                    uploadFile = file;
-                    mediaType = file.type.startsWith('video') ? 'video' : 'image';
-                } else if (recordedAudioBlob) {
-                    uploadFile = new File([recordedAudioBlob], "voice_note.mp3", { type: 'audio/mp3' });
-                    mediaType = 'audio';
-                }
+              <button
+                class="like-btn"
+                data-post-id="${post.id}"
+              >
+                ❤️ ${Number(post.likes || 0)}
+              </button>
+            </div>
+          `;
 
-                if (uploadFile) {
-                    const fileName = `${Date.now()}_${uploadFile.name}`;
-                    const { data: uploadData, error: uploadError } = await _supabase.storage
-                        .from('post-media') // የሱፓቤዝ ስቶሬጅ Bucket ስም (Bucket ስሙን 'post-media' ብለው መፍጠር ይኖርብዎታል)
-                        .upload(fileName, uploadFile);
+          postsContainer.appendChild(postCard);
+        });
 
-                    if (uploadError) {
-                        throw uploadError;
-                    }
+        document.querySelectorAll('.like-btn').forEach(button => {
+          button.addEventListener('click', () => {
+            likePost(Number(button.dataset.postId));
+          });
+        });
 
-                    // የፋይሉን ፐብሊክ ዩአርኤል ማግኘት
-                    const { data: publicUrlData } = _supabase.storage
-                        .from('post-media')
-                        .getPublicUrl(fileName);
+      } catch (error) {
+        console.error('fetchPosts error:', error);
 
-                    mediaUrl = publicUrlData.publicUrl;
-                }
+        postsContainer.innerHTML = `
+          <div class="empty error">
+            ፖስቶችን ማምጣት አልተቻለም።
+          </div>
+        `;
+      }
+    }
 
-                // ዳታቤዝ ውስጥ ማስገባት
-                const { error: dbError } = await _supabase
-                    .from('posts')
-                    .insert([
-                        { 
-                            content: contentText, 
-                            media_url: mediaUrl, 
-                            media_type: mediaType,
-                            likes: 0 
-                        }
-                    ]);
+    async function uploadMedia(file) {
+      const safeName = file.name
+        .replace(/[^a-zA-Z0-9._-]/g, '_');
 
-                if (dbError) throw dbError;
+      const randomId =
+        window.crypto && crypto.randomUUID
+          ? crypto.randomUUID()
+          : Math.random().toString(36).slice(2);
 
-                // 폼 ፊልዶቹን ባዶ ማድረግ
-                document.getElementById('postContent').value = '';
-                if(fileInput) fileInput.value = '';
-                document.getElementById('selectedFileName').textContent = '';
-                recordedAudioBlob = null;
-                fetchPosts();
+      const filePath =
+        `${Date.now()}_${randomId}_${safeName}`;
 
-            } catch (err) {
-                alert('ፖስት ማድረግ አልተቻለም: ' + (err.message || err));
-                console.error(err);
-            } finally {
-                submitBtn.textContent = "ለፖረው";
-                submitBtn.disabled = false;
-            }
+      const { error: uploadError } =
+        await supabaseClient.storage
+          .from('post-media')
+          .upload(filePath, file, {
+            upsert: false,
+            contentType: file.type
+          });
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      const { data } = supabaseClient.storage
+        .from('post-media')
+        .getPublicUrl(filePath);
+
+      if (!data || !data.publicUrl) {
+        throw new Error('Public media URL አልተገኘም።');
+      }
+
+      return data.publicUrl;
+    }
+
+    async function createPost() {
+      const text = postContent.value.trim();
+
+      const selectedUpload =
+        mediaFile.files && mediaFile.files[0]
+          ? mediaFile.files[0]
+          : null;
+
+      if (
+        !text &&
+        !selectedUpload &&
+        !recordedAudioBlob &&
+        !liveVideoBlob
+      ) {
+        setStatus(
+          'ጽሁፍ፣ ፎቶ፣ ድምጽ ወይም ቪዲዮ ያስገቡ።',
+          true
+        );
+        return;
+      }
+
+      publishBtn.disabled = true;
+      publishBtn.textContent = 'በመላክ ላይ...';
+      setStatus('በመላክ ላይ...');
+
+      try {
+        let uploadFile = null;
+        let mediaType = null;
+
+        if (selectedUpload) {
+          uploadFile = selectedUpload;
+          mediaType = selectedUpload.type.startsWith('video')
+            ? 'video'
+            : 'image';
+
+        } else if (recordedAudioBlob) {
+          const type =
+            recordedAudioBlob.type || 'audio/webm';
+
+          const extension =
+            type.includes('ogg') ? 'ogg' : 'webm';
+
+          uploadFile = new File(
+            [recordedAudioBlob],
+            `voice.${extension}`,
+            { type }
+          );
+
+          mediaType = 'audio';
+
+        } else if (liveVideoBlob) {
+          const type =
+            liveVideoBlob.type || 'video/webm';
+
+          const extension =
+            type.includes('mp4') ? 'mp4' : 'webm';
+
+          uploadFile = new File(
+            [liveVideoBlob],
+            `live.${extension}`,
+            { type }
+          );
+
+          mediaType = 'live';
         }
 
-        // ላይክ መጨመር
-        async function likePost(postId, currentLikes) {
-            const { error } = await _supabase
-                .from('posts')
-                .update({ likes: currentLikes + 1 })
-                .eq('id', postId);
+        let mediaUrl = null;
 
-            if (!error) {
-                fetchPosts();
-            }
+        if (uploadFile) {
+          mediaUrl = await uploadMedia(uploadFile);
         }
 
-        function escapeHtml(text) {
-            const map = {
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#039;'
-            };
-            return text.replace(/[&<>"']/g, m => map[m]);
+        const { error } = await supabaseClient
+          .from('posts')
+          .insert({
+            content: text ||
+              (mediaType === 'live'
+                ? '🔴 Live Broadcast'
+                : ''),
+            media_url: mediaUrl,
+            media_type: mediaType,
+            likes: 0
+          });
+
+        if (error) {
+          throw error;
         }
 
-        // ገጹ ሲከፈት ፖስቶችን መጫን
-        fetchPosts();
-    </script>
+        postContent.value = '';
+        mediaFile.value = '';
+        selectedFile.textContent = '';
+        recordedAudioBlob = null;
+        liveVideoBlob = null;
+
+        setStatus('✅ ፖስቱ ተሳክቶ ተልኳል።');
+        await fetchPosts();
+
+      } catch (error) {
+        console.error('createPost error:', error);
+        setStatus(
+          'ፖስቱ መላክ አልተቻለም: ' +
+          (error.message || error),
+          true
+        );
+      } finally {
+        publishBtn.disabled = false;
+        publishBtn.textContent = 'ፖስት አድርግ';
+      }
+    }
+
+    async function likePost(postId) {
+      try {
+        const { data: post, error: readError } =
+          await supabaseClient
+            .from('posts')
+            .select('likes')
+            .eq('id', postId)
+            .single();
+
+        if (readError) {
+          throw readError;
+        }
+
+        const { error: updateError } =
+          await supabaseClient
+            .from('posts')
+            .update({
+              likes: Number(post.likes || 0) + 1
+            })
+            .eq('id', postId);
+
+        if (updateError) {
+          throw updateError;
+        }
+
+        await fetchPosts();
+
+      } catch (error) {
+        console.error('likePost error:', error);
+        setStatus('Like ማድረግ አልተቻለም።', true);
+      }
+    }
+
+    publishBtn.addEventListener('click', createPost);
+
+    fetchPosts();
+
+    const loopFamilyChannel = supabaseClient
+      .channel('loop-family-posts')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'posts'
+        },
+        payload => {
+          console.log('LOOP Family update:', payload);
+          fetchPosts();
+        }
+      )
+      .subscribe(status => {
+        console.log('Realtime status:', status);
+
+        if (status === 'SUBSCRIBED') {
+          connectionStatus.textContent =
+            '✅ LOOP Family Realtime connected';
+          connectionStatus.style.color = '#4ade80';
+        }
+
+        if (status === 'CHANNEL_ERROR') {
+          connectionStatus.textContent =
+            '❌ Realtime channel error';
+          connectionStatus.style.color = '#f87171';
+        }
+
+        if (status === 'TIMED_OUT') {
+          connectionStatus.textContent =
+            '⚠️ Realtime connection timed out';
+          connectionStatus.style.color = '#facc15';
+        }
+
+        if (status === 'CLOSED') {
+          connectionStatus.textContent =
+            '⚠️ Realtime channel closed';
+          connectionStatus.style.color = '#facc15';
+        }
+      });
+
+    window.addEventListener('beforeunload', () => {
+      supabaseClient.removeChannel(loopFamilyChannel);
+      stopStream();
+    });
+  </script>
 </body>
 </html>
