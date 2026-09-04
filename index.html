@@ -6,6 +6,7 @@
     name="viewport"
     content="width=device-width, initial-scale=1.0"
   />
+
   <title>LOOP Family</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -15,58 +16,35 @@
       box-sizing: border-box;
     }
 
-    :root {
-      --bg: #080d16;
-      --card: #111827;
-      --input: #1f2937;
-      --border: #374151;
-      --text: #f8fafc;
-      --muted: #94a3b8;
-      --green: #4ade80;
-      --blue: #3b82f6;
-      --red: #ef4444;
-      --orange: #f97316;
-      --yellow: #facc15;
-    }
-
     body {
-      min-height: 100vh;
       margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: Arial, "Noto Sans Ethiopic", sans-serif;
+      min-height: 100vh;
+      background: #07111f;
+      color: white;
+      font-family: Arial, sans-serif;
     }
 
     .app {
       width: 100%;
-      max-width: 600px;
-      margin: 0 auto;
+      max-width: 620px;
+      margin: auto;
       padding: 14px;
     }
 
     .title {
-      margin: 10px 0 15px;
-      color: var(--green);
-      font-size: 28px;
+      margin: 10px 0 18px;
+      color: #4ade80;
+      font-size: 27px;
       font-weight: bold;
-      text-align: center;
-    }
-
-    .status {
-      min-height: 20px;
-      margin-bottom: 12px;
-      color: var(--muted);
-      font-size: 12px;
       text-align: center;
     }
 
     .card {
       margin-bottom: 16px;
-      padding: 16px;
-      background: var(--card);
-      border: 1px solid #1f2937;
+      padding: 15px;
+      background: #111827;
+      border: 1px solid #263244;
       border-radius: 14px;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
     }
 
     h2,
@@ -75,13 +53,11 @@
     }
 
     h2 {
-      color: var(--green);
-      font-size: 20px;
+      color: #4ade80;
     }
 
     h3 {
       color: #60a5fa;
-      font-size: 18px;
     }
 
     input,
@@ -89,11 +65,11 @@
       width: 100%;
       margin: 6px 0;
       padding: 12px;
-      border: 1px solid var(--border);
+      background: #1f2937;
+      color: white;
+      border: 1px solid #475569;
       border-radius: 9px;
       outline: none;
-      background: var(--input);
-      color: var(--text);
       font-size: 15px;
     }
 
@@ -104,7 +80,7 @@
 
     input:focus,
     textarea:focus {
-      border-color: var(--green);
+      border-color: #4ade80;
     }
 
     button {
@@ -113,38 +89,40 @@
       padding: 12px;
       border: 0;
       border-radius: 9px;
-      color: #ffffff;
+      color: white;
       cursor: pointer;
-      font-size: 14px;
       font-weight: bold;
     }
 
-    button:disabled {
-      cursor: not-allowed;
-      opacity: 0.6;
+    button:hover {
+      opacity: 0.85;
     }
 
     .blue {
-      background: var(--blue);
+      background: #2563eb;
     }
 
     .green {
-      background: #10b981;
+      background: #059669;
     }
 
     .red {
-      background: var(--red);
+      background: #dc2626;
     }
 
     .orange {
-      background: var(--orange);
+      background: #ea580c;
+    }
+
+    .purple {
+      background: #7c3aed;
     }
 
     .hidden {
       display: none !important;
     }
 
-    .auth-grid {
+    .auth-buttons {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
@@ -153,35 +131,30 @@
     .message {
       min-height: 22px;
       margin-top: 10px;
-      color: var(--green);
-      font-size: 14px;
-      line-height: 1.55;
+      color: #4ade80;
+      font-size: 13px;
     }
 
-    .message.error {
+    .error {
       color: #f87171;
     }
 
-    .user-email {
-      color: var(--green);
-      overflow-wrap: anywhere;
-    }
-
     .post {
-      margin-bottom: 12px;
+      margin-bottom: 14px;
       padding: 14px;
       background: #0f172a;
-      border: 1px solid #263244;
+      border: 1px solid #334155;
       border-radius: 12px;
     }
 
-    .post-text {
+    .post-content {
       white-space: pre-wrap;
-      overflow-wrap: anywhere;
       line-height: 1.6;
+      overflow-wrap: anywhere;
     }
 
-    .post-media {
+    .post-image,
+    .post-video {
       display: block;
       width: 100%;
       max-height: 400px;
@@ -191,55 +164,76 @@
       object-fit: contain;
     }
 
-    .post-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      margin-top: 12px;
-      padding-top: 9px;
-      border-top: 1px solid #334155;
-      color: var(--muted);
+    .post-date {
+      margin-top: 10px;
+      color: #94a3b8;
       font-size: 11px;
     }
 
-    .like-btn {
+    .social-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 12px;
+    }
+
+    .social-actions button {
       width: auto;
       margin: 0;
-      padding: 7px 10px;
+      padding: 8px 10px;
       background: #1e293b;
       border: 1px solid #475569;
       font-size: 12px;
     }
 
+    .comment-box {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid #334155;
+    }
+
+    .comment-box button {
+      background: #2563eb;
+    }
+
+    .comment-item {
+      margin-top: 7px;
+      padding: 8px;
+      background: #1e293b;
+      border-radius: 7px;
+      font-size: 13px;
+    }
+
+    .user-card {
+      margin-bottom: 10px;
+      padding: 12px;
+      background: #0f172a;
+      border-radius: 10px;
+    }
+
+    .user-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .user-actions button {
+      width: auto;
+      margin: 0;
+      padding: 8px 10px;
+      font-size: 12px;
+    }
+
     .empty {
-      padding: 18px;
-      color: var(--muted);
+      padding: 20px;
+      color: #94a3b8;
       text-align: center;
     }
 
-    .live-box {
-      margin-top: 12px;
-      padding: 12px;
-      background: #1e293b;
-      border-radius: 10px;
-      color: var(--yellow);
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
     @media (max-width: 430px) {
-      .app {
-        padding: 10px;
-      }
-
-      .auth-grid {
+      .auth-buttons {
         grid-template-columns: 1fr;
-      }
-
-      .post-footer {
-        align-items: flex-start;
-        flex-direction: column;
       }
     }
   </style>
@@ -249,57 +243,72 @@
   <main class="app">
     <div class="title">👥 LOOP Family</div>
 
-    <div id="realtime-status" class="status">
-      Realtime በመገናኘት ላይ...
-    </div>
-
     <!-- Authentication -->
     <section class="card">
       <h3>🔐 Login / Sign Up</h3>
 
-      <div id="login-form">
+      <div id="login-section">
         <input
           id="email"
           type="email"
           placeholder="Email"
-          autocomplete="email"
         />
 
         <input
           id="password"
           type="password"
           placeholder="Password"
-          autocomplete="current-password"
         />
 
-        <div class="auth-grid">
-          <button id="login-btn" class="blue" type="button">
+        <div class="auth-buttons">
+          <button
+            id="login-btn"
+            class="blue"
+            type="button"
+          >
             ግባ
           </button>
 
-          <button id="signup-btn" class="green" type="button">
+          <button
+            id="signup-btn"
+            class="green"
+            type="button"
+          >
             አካውንት ክፈት
           </button>
         </div>
 
-        <div id="auth-message" class="message"></div>
+        <div
+          id="auth-message"
+          class="message"
+        ></div>
       </div>
 
-      <div id="logged-user" class="hidden">
+      <div
+        id="user-section"
+        class="hidden"
+      >
         <div>
           ገብተሃል:
-          <span id="user-email" class="user-email"></span>
+          <strong id="user-email"></strong>
         </div>
 
-        <button id="logout-btn" class="red" type="button">
+        <button
+          id="logout-btn"
+          class="red"
+          type="button"
+        >
           ውጣ
         </button>
       </div>
     </section>
 
-    <!-- Only logged-in users can see this area -->
-    <section id="family-area" class="card hidden">
-      <h2>LOOP Family እንቅስቃሴ</h2>
+    <!-- New post -->
+    <section
+      id="post-section"
+      class="card hidden"
+    >
+      <h2>✍️ አዲስ Post</h2>
 
       <textarea
         id="post-content"
@@ -312,329 +321,322 @@
         accept="image/*,video/*"
       />
 
-      <button id="post-btn" class="blue" type="button">
-        ፖስት አድርግ
+      <button
+        id="post-btn"
+        class="green"
+        type="button"
+      >
+        Post አድርግ
       </button>
 
-      <button id="live-btn" class="orange" type="button">
-        🔴 Live ጀምር
-      </button>
-
-      <div id="family-message" class="message"></div>
-
-      <div id="live-area" class="live-box hidden">
-        ✅ Login ተረጋግጧል።<br />
-        Live ለመጀመር የcamera እና streaming ክፍል ይጨመራል።
-      </div>
+      <div
+        id="post-message"
+        class="message"
+      ></div>
     </section>
 
-    <!-- Everyone can read posts -->
-    <section class="card">
-      <h3>📰 LOOP Family Posts</h3>
+    <!-- Users -->
+    <section
+      id="users-section"
+      class="card hidden"
+    >
+      <h2>👥 Users</h2>
+      <div id="users-list"></div>
+    </section>
 
-      <div id="posts-list">
-        <div class="empty">
-          ፖስቶች በመጫን ላይ...
-        </div>
-      </div>
+    <!-- Posts -->
+    <section class="card">
+      <h2>📰 Posts</h2>
+      <div id="posts-list"></div>
     </section>
   </main>
 
   <script>
     const SUPABASE_URL =
-      'https://chmwdtxktrezasgbbvjr.supabase.co';
+      'YOUR_SUPABASE_URL';
 
-    const SUPABASE_KEY =
-      'sb_publishable_QQAtpXYe2IQqmvpFrRyBXg_GWpnnQqc';
+    const SUPABASE_ANON_KEY =
+      'YOUR_SUPABASE_ANON_KEY';
 
     const supabaseClient =
       window.supabase.createClient(
         SUPABASE_URL,
-        SUPABASE_KEY,
-        {
-          auth: {
-            persistSession: true,
-            autoRefreshToken: true,
-            detectSessionInUrl: true
-          }
-        }
+        SUPABASE_ANON_KEY
       );
 
-    const loginForm =
-      document.getElementById('login-form');
+    const loginSection =
+      document.getElementById(
+        'login-section'
+      );
 
-    const loggedUser =
-      document.getElementById('logged-user');
+    const userSection =
+      document.getElementById(
+        'user-section'
+      );
 
-    const familyArea =
-      document.getElementById('family-area');
+    const postSection =
+      document.getElementById(
+        'post-section'
+      );
 
-    const emailInput =
-      document.getElementById('email');
-
-    const passwordInput =
-      document.getElementById('password');
-
-    const authMessage =
-      document.getElementById('auth-message');
-
-    const familyMessage =
-      document.getElementById('family-message');
+    const usersSection =
+      document.getElementById(
+        'users-section'
+      );
 
     const userEmail =
-      document.getElementById('user-email');
+      document.getElementById(
+        'user-email'
+      );
 
-    const postContent =
-      document.getElementById('post-content');
+    const authMessage =
+      document.getElementById(
+        'auth-message'
+      );
 
-    const mediaFile =
-      document.getElementById('media-file');
+    const postMessage =
+      document.getElementById(
+        'post-message'
+      );
 
     const postsList =
-      document.getElementById('posts-list');
+      document.getElementById(
+        'posts-list'
+      );
 
-    const realtimeStatus =
-      document.getElementById('realtime-status');
+    const usersList =
+      document.getElementById(
+        'users-list'
+      );
 
-    const liveArea =
-      document.getElementById('live-area');
-
-    function showMessage(element, text, error = false) {
+    function showMessage(
+      element,
+      text,
+      error = false
+    ) {
       element.textContent = text;
-      element.className = error
-        ? 'message error'
-        : 'message';
+      element.classList.toggle(
+        'error',
+        error
+      );
     }
 
     function escapeHtml(value) {
-      return String(value).replace(/[&<>"']/g, char => {
-        const map = {
-          '&': '&amp;',
-          '<': '&lt;',
-          '>': '&gt;',
-          '"': '&quot;',
-          "'": '&#039;'
-        };
-
-        return map[char];
-      });
+      return String(value || '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
     }
 
-    function safeUrl(value) {
-      try {
-        const url = new URL(value);
+    async function getCurrentUser() {
+      const {
+        data: { user }
+      } = await supabaseClient.auth.getUser();
 
-        if (url.protocol !== 'https:') {
-          return '';
-        }
+      return user;
+    }
 
-        return escapeHtml(url.href);
-      } catch {
+    async function requireLogin() {
+      const user =
+        await getCurrentUser();
+
+      if (!user) {
+        alert(
+          'ይህን ለማድረግ Login አድርግ።'
+        );
+
+        return null;
+      }
+
+      return user;
+    }
+
+    function renderMedia(post) {
+      if (!post.media_url) {
         return '';
       }
-    }
 
-    function showLoggedIn(user) {
-      loginForm.classList.add('hidden');
-      loggedUser.classList.remove('hidden');
-      familyArea.classList.remove('hidden');
+      if (post.media_type === 'video') {
+        return `
+          <video
+            class="post-video"
+            controls
+            src="${post.media_url}"
+          ></video>
+        `;
+      }
 
-      userEmail.textContent =
-        user.email || 'Authenticated user';
-    }
-
-    function showLoggedOut() {
-      loginForm.classList.remove('hidden');
-      loggedUser.classList.add('hidden');
-      familyArea.classList.add('hidden');
-      liveArea.classList.add('hidden');
-      userEmail.textContent = '';
+      return `
+        <img
+          class="post-image"
+          src="${post.media_url}"
+          alt="Post image"
+        />
+      `;
     }
 
     async function updateAuthUI() {
-      const {
-        data: { session },
-        error
-      } = await supabaseClient.auth.getSession();
+      const user =
+        await getCurrentUser();
 
-      if (error) {
-        console.error(error);
-        showLoggedOut();
-        return;
-      }
+      if (user) {
+        loginSection.classList.add(
+          'hidden'
+        );
 
-      if (session?.user) {
-        showLoggedIn(session.user);
+        userSection.classList.remove(
+          'hidden'
+        );
+
+        postSection.classList.remove(
+          'hidden'
+        );
+
+        usersSection.classList.remove(
+          'hidden'
+        );
+
+        userEmail.textContent =
+          user.email || '';
+
+        await loadUsers();
       } else {
-        showLoggedOut();
+        loginSection.classList.remove(
+          'hidden'
+        );
+
+        userSection.classList.add(
+          'hidden'
+        );
+
+        postSection.classList.add(
+          'hidden'
+        );
+
+        usersSection.classList.add(
+          'hidden'
+        );
       }
     }
 
-    async function loginUser() {
+    async function login() {
       const email =
-        emailInput.value.trim();
+        document
+          .getElementById('email')
+          .value
+          .trim();
 
       const password =
-        passwordInput.value;
+        document
+          .getElementById('password')
+          .value;
 
       if (!email || !password) {
         showMessage(
           authMessage,
-          'Email እና Password ይሙሉ።',
+          'Email እና Password ሙላ።',
           true
         );
+
         return;
       }
 
-      const button =
-        document.getElementById('login-btn');
-
-      button.disabled = true;
-      showMessage(
-        authMessage,
-        'በመግባት ላይ...'
-      );
-
       const {
-        data,
         error
       } = await supabaseClient.auth.signInWithPassword({
         email,
         password
       });
 
-      button.disabled = false;
-
       if (error) {
         showMessage(
           authMessage,
-          'Login አልተሳካም: ' + error.message,
+          error.message,
           true
         );
+
         return;
       }
-
-      showLoggedIn(data.user);
 
       showMessage(
         authMessage,
         '✅ Login ተሳክቷል።'
       );
+
+      await updateAuthUI();
+      await loadPosts();
     }
 
-    async function signupUser() {
+    async function signup() {
       const email =
-        emailInput.value.trim();
+        document
+          .getElementById('email')
+          .value
+          .trim();
 
       const password =
-        passwordInput.value;
+        document
+          .getElementById('password')
+          .value;
 
       if (!email || !password) {
         showMessage(
           authMessage,
-          'Email እና Password ይሙሉ።',
+          'Email እና Password ሙላ።',
           true
         );
+
         return;
       }
-
-      if (password.length < 6) {
-        showMessage(
-          authMessage,
-          'Password ቢያንስ 6 ቁምፊ ይሁን።',
-          true
-        );
-        return;
-      }
-
-      const button =
-        document.getElementById('signup-btn');
-
-      button.disabled = true;
-      showMessage(
-        authMessage,
-        'አካውንት በመፍጠር ላይ...'
-      );
 
       const {
-        data,
         error
       } = await supabaseClient.auth.signUp({
         email,
         password
       });
 
-      button.disabled = false;
-
       if (error) {
         showMessage(
           authMessage,
-          'ምዝገባ አልተሳካም: ' + error.message,
+          error.message,
           true
         );
+
         return;
       }
-
-      if (data.session && data.user) {
-        showLoggedIn(data.user);
-
-        showMessage(
-          authMessage,
-          '✅ አካውንት ተፈጥሯል።'
-        );
-      } else {
-        showMessage(
-          authMessage,
-          '✅ ምዝገባ ተሳክቷል። Email አረጋግጥና Login አድርግ።'
-        );
-      }
-    }
-
-    async function logoutUser() {
-      const { error } =
-        await supabaseClient.auth.signOut();
-
-      if (error) {
-        showMessage(
-          authMessage,
-          'Logout አልተሳካም: ' + error.message,
-          true
-        );
-        return;
-      }
-
-      showLoggedOut();
 
       showMessage(
         authMessage,
-        'ከአካውንትህ ወጥተሃል።'
+        '✅ Account ተፈጥሯል። Email ማረጋገጥ ካስፈለገ አረጋግጥ።'
       );
     }
 
-    async function uploadMedia(file) {
-      const cleanName =
-        file.name.replace(
-          /[^a-zA-Z0-9._-]/g,
-          '_'
-        );
+    async function logout() {
+      await supabaseClient.auth.signOut();
 
-      const random =
-        Math.random()
-          .toString(36)
-          .slice(2);
+      await updateAuthUI();
+      await loadPosts();
+    }
 
-      const path =
-        `${Date.now()}_${random}_${cleanName}`;
+    async function uploadMedia(file, userId) {
+      if (!file) {
+        return {
+          url: null,
+          type: null
+        };
+      }
+
+      const fileName =
+        `${userId}/${Date.now()}-${file.name}`;
 
       const {
         error
       } = await supabaseClient.storage
         .from('post-media')
-        .upload(path, file, {
-          cacheControl: '3600',
-          upsert: false,
-          contentType: file.type
-        });
+        .upload(fileName, file);
 
       if (error) {
         throw error;
@@ -644,110 +646,59 @@
         data
       } = supabaseClient.storage
         .from('post-media')
-        .getPublicUrl(path);
+        .getPublicUrl(fileName);
 
-      if (!data?.publicUrl) {
-        throw new Error(
-          'Media URL አልተፈጠረም።'
-        );
-      }
+      const type =
+        file.type.startsWith('video/')
+          ? 'video'
+          : 'image';
 
-      return data.publicUrl;
-    }
-
-    function renderMedia(post) {
-      if (!post.media_url) {
-        return '';
-      }
-
-      const url =
-        safeUrl(post.media_url);
-
-      if (!url) {
-        return '';
-      }
-
-      if (post.media_type === 'video') {
-        return `
-          <video
-            class="post-media"
-            src="${url}"
-            controls
-            preload="metadata"
-          ></video>
-        `;
-      }
-
-      return `
-        <img
-          class="post-media"
-          src="${url}"
-          alt="LOOP Family media"
-          loading="lazy"
-        />
-      `;
+      return {
+        url: data.publicUrl,
+        type
+      };
     }
 
     async function createPost() {
-      const {
-        data: { user }
-      } = await supabaseClient.auth.getUser();
+      const user =
+        await requireLogin();
 
       if (!user) {
-        showMessage(
-          familyMessage,
-          'ፖስት ለማድረግ Login አድርግ።',
-          true
-        );
-        showLoggedOut();
         return;
       }
 
       const content =
-        postContent.value.trim();
+        document
+          .getElementById('post-content')
+          .value
+          .trim();
 
       const file =
-        mediaFile.files?.[0] || null;
+        document
+          .getElementById('media-file')
+          .files[0];
 
       if (!content && !file) {
         showMessage(
-          familyMessage,
-          'ጽሁፍ ወይም ፎቶ/ቪዲዮ አስገባ።',
+          postMessage,
+          'Text ወይም image/video አስገባ።',
           true
         );
+
         return;
       }
-
-      if (
-        file &&
-        file.size > 20 * 1024 * 1024
-      ) {
-        showMessage(
-          familyMessage,
-          'ፋይሉ ከ20MB መብለጥ የለበትም።',
-          true
-        );
-        return;
-      }
-
-      const button =
-        document.getElementById('post-btn');
-
-      button.disabled = true;
-      button.textContent = 'በመላክ ላይ...';
 
       try {
-        let mediaUrl = null;
-        let mediaType = null;
+        showMessage(
+          postMessage,
+          'በመላክ ላይ...'
+        );
 
-        if (file) {
-          mediaUrl = await uploadMedia(file);
-
-          mediaType =
-            file.type.startsWith('video/')
-              ? 'video'
-              : 'image';
-        }
+        const media =
+          await uploadMedia(
+            file,
+            user.id
+          );
 
         const {
           error
@@ -755,72 +706,48 @@
           .from('posts')
           .insert({
             user_id: user.id,
-            content,
-            media_url: mediaUrl,
-            media_type: mediaType,
-            likes: 0
+            content: content || null,
+            media_url: media.url,
+            media_type: media.type
           });
 
         if (error) {
           throw error;
         }
 
-        postContent.value = '';
-        mediaFile.value = '';
+        document
+          .getElementById('post-content')
+          .value = '';
+
+        document
+          .getElementById('media-file')
+          .value = '';
 
         showMessage(
-          familyMessage,
-          '✅ ፖስት ተልኳል።'
+          postMessage,
+          '✅ Post ተልኳል።'
         );
 
         await loadPosts();
-
       } catch (error) {
-        console.error(error);
-
         showMessage(
-          familyMessage,
-          'ፖስት አልተላከም: ' + error.message,
+          postMessage,
+          error.message,
           true
         );
-      } finally {
-        button.disabled = false;
-        button.textContent = 'ፖስት አድርግ';
       }
-    }
-
-    async function startLive() {
-      const {
-        data: { user }
-      } = await supabaseClient.auth.getUser();
-
-      if (!user) {
-        showMessage(
-          familyMessage,
-          'Live ለመጀመር Login አድርግ።',
-          true
-        );
-        showLoggedOut();
-        return;
-      }
-
-      liveArea.classList.remove('hidden');
-
-      showMessage(
-        familyMessage,
-        '✅ Live ለመጀመር ተፈቅዷል።'
-      );
     }
 
     async function loadPosts() {
+      postsList.innerHTML =
+        '<div class="empty">Posts በመጫን ላይ...</div>';
+
       const {
-        data,
+        data: posts,
         error
       } = await supabaseClient
         .from('posts')
-        .select(
-          'id, user_id, content, media_url, media_type, likes, created_at'
-        )
+        .select('*')
         .order('created_at', {
           ascending: false
         });
@@ -828,160 +755,640 @@
       if (error) {
         postsList.innerHTML = `
           <div class="empty">
-            ፖስቶችን ማምጣት አልተቻለም።<br />
             ${escapeHtml(error.message)}
           </div>
         `;
+
+        return;
+      }
+
+      if (!posts || posts.length === 0) {
+        postsList.innerHTML =
+          '<div class="empty">እስካሁን Post የለም።</div>';
+
         return;
       }
 
       postsList.innerHTML = '';
 
-      if (!data || data.length === 0) {
-        postsList.innerHTML = `
-          <div class="empty">
-            እስካሁን ምንም ፖስት የለም።
-          </div>
-        `;
-        return;
+      for (const post of posts) {
+        await renderPost(post);
       }
+    }
 
-      data.forEach(post => {
-        const element =
-          document.createElement('article');
+    async function renderPost(post) {
+      const {
+        count: likeCount
+      } = await supabaseClient
+        .from('post_likes')
+        .select('*', {
+          count: 'exact',
+          head: true
+        })
+        .eq('post_id', post.id);
 
-        element.className = 'post';
+      const {
+        count: commentCount
+      } = await supabaseClient
+        .from('comments')
+        .select('*', {
+          count: 'exact',
+          head: true
+        })
+        .eq('post_id', post.id);
 
-        element.innerHTML = `
-          <div class="post-text">
-            ${escapeHtml(post.content || '')}
-          </div>
+      const {
+        count: shareCount
+      } = await supabaseClient
+        .from('post_shares')
+        .select('*', {
+          count: 'exact',
+          head: true
+        })
+        .eq('post_id', post.id);
 
-          ${renderMedia(post)}
+      const element =
+        document.createElement('article');
 
-          <div class="post-footer">
-            <span>
-              ${new Date(post.created_at)
-                .toLocaleString('am-ET')}
-            </span>
+      element.className = 'post';
 
-            <button
-              class="like-btn"
-              type="button"
-              data-id="${post.id}"
-            >
-              ❤️ ${Number(post.likes || 0)}
-            </button>
-          </div>
-        `;
+      element.innerHTML = `
+        <div class="post-content">
+          ${escapeHtml(post.content || '')}
+        </div>
 
-        postsList.appendChild(element);
-      });
+        ${renderMedia(post)}
 
-      document
-        .querySelectorAll('.like-btn')
-        .forEach(button => {
-          button.addEventListener(
-            'click',
-            () => likePost(
-              Number(button.dataset.id)
-            )
-          );
+        <div class="post-date">
+          ${new Date(post.created_at)
+            .toLocaleString('am-ET')}
+        </div>
+
+        <div class="social-actions">
+          <button
+            class="like-btn"
+            type="button"
+          >
+            ❤️ Like ${likeCount || 0}
+          </button>
+
+          <button
+            class="comment-btn"
+            type="button"
+          >
+            💬 Comment ${commentCount || 0}
+          </button>
+
+          <button
+            class="share-btn"
+            type="button"
+          >
+            🔁 Share ${shareCount || 0}
+          </button>
+        </div>
+
+        <div
+          id="comment-box-${post.id}"
+          class="comment-box hidden"
+        >
+          <input
+            id="comment-input-${post.id}"
+            type="text"
+            placeholder="Comment ጻፍ..."
+          />
+
+          <button
+            class="send-comment-btn"
+            type="button"
+          >
+            Comment ላክ
+          </button>
+
+          <div
+            id="comments-${post.id}"
+          ></div>
+        </div>
+      `;
+
+      postsList.appendChild(element);
+
+      element
+        .querySelector('.like-btn')
+        .addEventListener('click', () => {
+          toggleLike(post.id);
+        });
+
+      element
+        .querySelector('.comment-btn')
+        .addEventListener('click', () => {
+          toggleComments(post.id);
+        });
+
+      element
+        .querySelector('.share-btn')
+        .addEventListener('click', () => {
+          sharePost(post.id);
+        });
+
+      element
+        .querySelector('.send-comment-btn')
+        .addEventListener('click', () => {
+          const input =
+            document.getElementById(
+              `comment-input-${post.id}`
+            );
+
+          addComment(post.id, input);
         });
     }
 
-    async function likePost(postId) {
-      const {
-        data: post,
-        error: readError
-      } = await supabaseClient
-        .from('posts')
-        .select('likes')
-        .eq('id', postId)
-        .single();
+    async function toggleLike(postId) {
+      const user =
+        await requireLogin();
 
-      if (readError) {
-        console.error(readError);
+      if (!user) {
+        return;
+      }
+
+      const {
+        data: oldLike,
+        error: findError
+      } = await supabaseClient
+        .from('post_likes')
+        .select('id')
+        .eq('post_id', postId)
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      if (findError) {
+        alert(findError.message);
+        return;
+      }
+
+      if (oldLike) {
+        const {
+          error
+        } = await supabaseClient
+          .from('post_likes')
+          .delete()
+          .eq('id', oldLike.id);
+
+        if (error) {
+          alert(error.message);
+          return;
+        }
+      } else {
+        const {
+          error
+        } = await supabaseClient
+          .from('post_likes')
+          .insert({
+            post_id: postId,
+            user_id: user.id
+          });
+
+        if (error) {
+          alert(error.message);
+          return;
+        }
+      }
+
+      await loadPosts();
+    }
+
+    async function toggleComments(postId) {
+      const box =
+        document.getElementById(
+          `comment-box-${postId}`
+        );
+
+      if (!box) {
+        return;
+      }
+
+      box.classList.toggle('hidden');
+
+      if (
+        !box.classList.contains('hidden')
+      ) {
+        await loadComments(postId);
+      }
+    }
+
+    async function loadComments(postId) {
+      const list =
+        document.getElementById(
+          `comments-${postId}`
+        );
+
+      const {
+        data,
+        error
+      } = await supabaseClient
+        .from('comments')
+        .select('content, created_at')
+        .eq('post_id', postId)
+        .order('created_at', {
+          ascending: true
+        });
+
+      if (error) {
+        list.innerHTML = `
+          <div class="comment-item">
+            ${escapeHtml(error.message)}
+          </div>
+        `;
+
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        list.innerHTML = `
+          <div class="comment-item">
+            Comment የለም።
+          </div>
+        `;
+
+        return;
+      }
+
+      list.innerHTML = data
+        .map(comment => `
+          <div class="comment-item">
+            ${escapeHtml(comment.content)}
+          </div>
+        `)
+        .join('');
+    }
+
+    async function addComment(
+      postId,
+      input
+    ) {
+      const user =
+        await requireLogin();
+
+      if (!user) {
+        return;
+      }
+
+      const content =
+        input.value.trim();
+
+      if (!content) {
+        alert('Comment ጻፍ።');
         return;
       }
 
       const {
         error
       } = await supabaseClient
-        .from('posts')
-        .update({
-          likes: Number(post.likes || 0) + 1
-        })
-        .eq('id', postId);
+        .from('comments')
+        .insert({
+          post_id: postId,
+          user_id: user.id,
+          content
+        });
 
       if (error) {
-        console.error(error);
+        alert(error.message);
         return;
+      }
+
+      input.value = '';
+
+      await loadComments(postId);
+      await loadPosts();
+    }
+
+    async function sharePost(postId) {
+      const user =
+        await requireLogin();
+
+      if (!user) {
+        return;
+      }
+
+      const {
+        error
+      } = await supabaseClient
+        .from('post_shares')
+        .insert({
+          post_id: postId,
+          user_id: user.id
+        });
+
+      if (
+        error &&
+        !error.message
+          .toLowerCase()
+          .includes('duplicate')
+      ) {
+        alert(error.message);
+        return;
+      }
+
+      const url =
+        `${window.location.origin}` +
+        `${window.location.pathname}` +
+        `?post=${postId}`;
+
+      try {
+        if (navigator.share) {
+          await navigator.share({
+            title: 'LOOP Family Post',
+            text: 'LOOP Family ላይ ይህን Post ተመልከት',
+            url
+          });
+        } else {
+          await navigator.clipboard
+            .writeText(url);
+
+          alert(
+            'የPost link ተቀድቷል።'
+          );
+        }
+      } catch {
+        console.log(
+          'Share cancelled'
+        );
       }
 
       await loadPosts();
     }
 
-    function setupRealtime() {
-      supabaseClient
-        .channel('loop-family-posts')
-        .on(
-          'postgres_changes',
-          {
-            event: '*',
-            schema: 'public',
-            table: 'posts'
-          },
-          payload => {
-            console.log(
-              'Realtime update:',
-              payload
-            );
+    async function loadUsers() {
+      const currentUser =
+        await getCurrentUser();
 
-            loadPosts();
-          }
-        )
-        .subscribe(status => {
-          console.log(
-            'Realtime status:',
-            status
-          );
+      if (!currentUser) {
+        return;
+      }
 
-          if (status === 'SUBSCRIBED') {
-            realtimeStatus.textContent =
-              '✅ Realtime ተገናኝቷል።';
+      const {
+        data: users,
+        error
+      } = await supabaseClient
+        .from('profiles')
+        .select('id, username, full_name')
+        .neq('id', currentUser.id)
+        .limit(30);
 
-            realtimeStatus.style.color =
-              '#4ade80';
-          } else if (status === 'CHANNEL_ERROR') {
-            realtimeStatus.textContent =
-              '❌ Realtime ስህተት።';
+      if (error) {
+        usersList.innerHTML = `
+          <div class="empty">
+            profiles table አልተገኘም።
+          </div>
+        `;
 
-            realtimeStatus.style.color =
-              '#f87171';
-          }
+        return;
+      }
+
+      if (!users || users.length === 0) {
+        usersList.innerHTML =
+          '<div class="empty">ሌላ User የለም።</div>';
+
+        return;
+      }
+
+      usersList.innerHTML = '';
+
+      for (const user of users) {
+        const card =
+          document.createElement('div');
+
+        card.className = 'user-card';
+
+        const name =
+          user.full_name ||
+          user.username ||
+          'User';
+
+        card.innerHTML = `
+          <strong>
+            ${escapeHtml(name)}
+          </strong>
+
+          <div class="user-actions">
+            <button
+              class="friend-btn"
+              type="button"
+            >
+              👥 Add Friend
+            </button>
+
+            <button
+              class="follow-btn"
+              type="button"
+            >
+              ➕ Follow
+            </button>
+
+            <button
+              class="subscribe-btn"
+              type="button"
+            >
+              🔔 Subscribe
+            </button>
+          </div>
+        `;
+
+        usersList.appendChild(card);
+
+        card
+          .querySelector('.friend-btn')
+          .addEventListener('click', () => {
+            addFriend(user.id);
+          });
+
+        card
+          .querySelector('.follow-btn')
+          .addEventListener('click', () => {
+            toggleFollow(user.id);
+          });
+
+        card
+          .querySelector('.subscribe-btn')
+          .addEventListener('click', () => {
+            toggleSubscribe(user.id);
+          });
+      }
+    }
+
+    async function addFriend(receiverId) {
+      const user =
+        await requireLogin();
+
+      if (!user) {
+        return;
+      }
+
+      const {
+        error
+      } = await supabaseClient
+        .from('friend_requests')
+        .insert({
+          sender_id: user.id,
+          receiver_id: receiverId,
+          status: 'pending'
         });
+
+      if (error) {
+        alert(
+          error.message
+            .toLowerCase()
+            .includes('duplicate')
+            ? 'Friend request ቀድሞ ተልኳል።'
+            : error.message
+        );
+
+        return;
+      }
+
+      alert(
+        '✅ Friend request ተልኳል።'
+      );
+    }
+
+    async function toggleFollow(
+      targetUserId
+    ) {
+      const user =
+        await requireLogin();
+
+      if (!user) {
+        return;
+      }
+
+      const {
+        data: oldFollow,
+        error: findError
+      } = await supabaseClient
+        .from('follows')
+        .select('id')
+        .eq('follower_id', user.id)
+        .eq('following_id', targetUserId)
+        .maybeSingle();
+
+      if (findError) {
+        alert(findError.message);
+        return;
+      }
+
+      if (oldFollow) {
+        const {
+          error
+        } = await supabaseClient
+          .from('follows')
+          .delete()
+          .eq('id', oldFollow.id);
+
+        if (error) {
+          alert(error.message);
+          return;
+        }
+
+        alert('Unfollow ተደርጓል።');
+      } else {
+        const {
+          error
+        } = await supabaseClient
+          .from('follows')
+          .insert({
+            follower_id: user.id,
+            following_id: targetUserId
+          });
+
+        if (error) {
+          alert(error.message);
+          return;
+        }
+
+        alert('✅ Follow ተደርጓል።');
+      }
+    }
+
+    async function toggleSubscribe(
+      creatorId
+    ) {
+      const user =
+        await requireLogin();
+
+      if (!user) {
+        return;
+      }
+
+      const {
+        data: oldSubscription,
+        error: findError
+      } = await supabaseClient
+        .from('subscriptions')
+        .select('id')
+        .eq('subscriber_id', user.id)
+        .eq('creator_id', creatorId)
+        .maybeSingle();
+
+      if (findError) {
+        alert(findError.message);
+        return;
+      }
+
+      if (oldSubscription) {
+        const {
+          error
+        } = await supabaseClient
+          .from('subscriptions')
+          .delete()
+          .eq('id', oldSubscription.id);
+
+        if (error) {
+          alert(error.message);
+          return;
+        }
+
+        alert(
+          'Subscription ተሰርዟል።'
+        );
+      } else {
+        const {
+          error
+        } = await supabaseClient
+          .from('subscriptions')
+          .insert({
+            subscriber_id: user.id,
+            creator_id: creatorId
+          });
+
+        if (error) {
+          alert(error.message);
+          return;
+        }
+
+        alert(
+          '✅ Subscribe ተደርጓል።'
+        );
+      }
     }
 
     document
       .getElementById('login-btn')
       .addEventListener(
         'click',
-        loginUser
+        login
       );
 
     document
       .getElementById('signup-btn')
       .addEventListener(
         'click',
-        signupUser
+        signup
       );
 
     document
       .getElementById('logout-btn')
       .addEventListener(
         'click',
-        logoutUser
+        logout
       );
 
     document
@@ -991,30 +1398,15 @@
         createPost
       );
 
-    document
-      .getElementById('live-btn')
-      .addEventListener(
-        'click',
-        startLive
-      );
-
     supabaseClient.auth.onAuthStateChange(
-      (_event, session) => {
-        if (session?.user) {
-          showLoggedIn(session.user);
-        } else {
-          showLoggedOut();
-        }
+      async () => {
+        await updateAuthUI();
+        await loadPosts();
       }
     );
 
-    async function startApp() {
-      await updateAuthUI();
-      await loadPosts();
-      setupRealtime();
-    }
-
-    startApp();
+    updateAuthUI();
+    loadPosts();
   </script>
 </body>
 </html>
