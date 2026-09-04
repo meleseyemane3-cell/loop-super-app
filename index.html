@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LOOP Family Super App</title>
+  <title>LOOP Super App - Ethiopia Tourism</title>
 
   <!-- Supabase CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -29,25 +29,84 @@
       max-width: 520px;
       min-height: 100vh;
       background: #0f172a;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      padding-bottom: 70px;
     }
 
     header {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      padding: 18px;
-      text-align: center;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       background: #0f172a;
-      color: #38bdf8;
       border-bottom: 1px solid #1e293b;
-      font-size: 22px;
+    }
+
+    .app-logo {
+      color: #38bdf8;
+      font-size: 20px;
       font-weight: bold;
+      text-align: center;
+      flex-grow: 1;
+    }
+
+    .lang-select {
+      background: #1e293b;
+      color: #38bdf8;
+      border: 1px solid #334155;
+      padding: 5px 10px;
+      border-radius: 8px;
+      cursor: pointer;
     }
 
     main {
       padding: 15px;
+      flex-grow: 1;
+      overflow-y: auto;
     }
 
+    .section-title {
+      color: #38bdf8;
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    /* Services Grid */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .service-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 15px 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .service-card:hover {
+      border-color: #38bdf8;
+    }
+
+    .service-icon {
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+
+    .service-name {
+      color: #f8fafc;
+      font-size: 13px;
+    }
+
+    /* Panel & Post Card */
     .panel,
     .post-card {
       background: #1e293b;
@@ -57,16 +116,9 @@
       margin-bottom: 15px;
     }
 
-    .panel-title {
-      color: #38bdf8;
-      font-size: 17px;
-      font-weight: bold;
-      margin-bottom: 12px;
-    }
-
     textarea {
       width: 100%;
-      min-height: 90px;
+      min-height: 80px;
       resize: vertical;
       padding: 12px;
       border-radius: 10px;
@@ -74,7 +126,7 @@
       outline: none;
       background: #0f172a;
       color: #fff;
-      font-size: 15px;
+      font-size: 14px;
     }
 
     textarea:focus {
@@ -85,22 +137,20 @@
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
-      margin: 12px 0;
+      margin: 10px 0;
     }
 
-    .tool-btn,
-    .like-btn {
+    .tool-btn {
       border: 1px solid #475569;
-      border-radius: 9px;
+      border-radius: 8px;
       background: #0f172a;
       color: #cbd5e1;
-      padding: 9px 11px;
+      padding: 8px 10px;
       cursor: pointer;
       font-size: 12px;
     }
 
-    .tool-btn:hover,
-    .like-btn:hover {
+    .tool-btn:hover {
       color: #38bdf8;
       border-color: #38bdf8;
     }
@@ -111,9 +161,9 @@
       border-radius: 9px;
       background: #0284c7;
       color: #fff;
-      padding: 12px;
+      padding: 11px;
       cursor: pointer;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: bold;
     }
 
@@ -121,162 +171,203 @@
       background: #0369a1;
     }
 
-    .publish-btn:disabled {
-      cursor: not-allowed;
-      opacity: 0.6;
-    }
-
     .status {
-      min-height: 20px;
-      margin: 5px 0 10px;
+      min-height: 18px;
+      margin: 5px 0;
       color: #38bdf8;
-      font-size: 12px;
+      font-size: 11px;
     }
 
     .error {
       color: #f87171;
     }
 
-    .empty {
-      padding: 25px 10px;
-      text-align: center;
-      color: #94a3b8;
-    }
-
     .post-content {
       white-space: pre-wrap;
       overflow-wrap: anywhere;
-      line-height: 1.6;
+      line-height: 1.5;
       color: #f8fafc;
+      font-size: 14px;
     }
 
     .post-media {
       width: 100%;
-      max-height: 360px;
+      max-height: 300px;
       object-fit: cover;
-      margin-top: 12px;
-      border-radius: 10px;
+      margin-top: 10px;
+      border-radius: 8px;
       background: #020617;
     }
 
-    .post-audio {
-      width: 100%;
-      margin-top: 12px;
-    }
-
-    .post-footer {
+    .post-actions {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      margin-top: 13px;
-      padding-top: 10px;
+      justify-content: space-around;
+      margin-top: 12px;
+      padding-top: 8px;
       border-top: 1px solid #334155;
+    }
+
+    .action-btn {
+      background: none;
+      border: none;
       color: #94a3b8;
-      font-size: 11px;
-    }
-
-    .live-label {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 3px 7px;
-      border-radius: 5px;
-      background: #dc2626;
-      color: #fff;
-      font-size: 10px;
-      font-weight: bold;
-    }
-
-    .selected-file {
-      color: #cbd5e1;
+      cursor: pointer;
       font-size: 12px;
-      margin-top: 8px;
-      overflow-wrap: anywhere;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .action-btn:hover {
+      color: #38bdf8;
+    }
+
+    /* Bottom Navigation Bar */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      max-width: 520px;
+      background: #0f172a;
+      border-top: 1px solid #1e293b;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      z-index: 100;
+    }
+
+    .nav-item {
+      background: none;
+      border: none;
+      color: #94a3b8;
+      cursor: pointer;
+      text-align: center;
+      font-size: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .nav-item.active, .nav-item:hover {
+      color: #38bdf8;
+    }
+
+    .nav-icon {
+      font-size: 18px;
     }
 
     .connection {
-      margin-bottom: 12px;
-      color: #94a3b8;
-      font-size: 11px;
+      font-size: 10px;
       text-align: center;
-    }
-
-    @media (max-width: 400px) {
-      main {
-        padding: 10px;
-      }
-
-      .panel,
-      .post-card {
-        padding: 12px;
-      }
-
-      .post-footer {
-        align-items: flex-start;
-        flex-direction: column;
-      }
+      margin-bottom: 8px;
+      color: #94a3b8;
     }
   </style>
 </head>
 
 <body>
   <div class="app">
-    <header>👥 LOOP Family</header>
+    <header>
+      <div style="width: 24px;"></div>
+      <div class="app-logo">LOOP</div>
+      <select class="lang-select">
+        <option>አማርኛ</option>
+        <option>English</option>
+      </select>
+    </header>
 
     <main>
-      <div id="connectionStatus" class="connection">
-        Realtime በመገናኘት ላይ...
+      <div id="connectionStatus" class="connection">Realtime በመገናኘት ላይ...</div>
+
+      <!-- አገልግሎቶች (Services Grid) -->
+      <div class="section-title">አገልግሎቶች</div>
+      <div class="services-grid">
+        <div class="service-card" onclick="alert('ቱሪዝም ገጽ')">
+          <div class="service-icon">✈️</div>
+          <div class="service-name">ቱሪዝም</div>
+        </div>
+        <div class="service-card" onclick="alert('አየር ሁኔታ ገጽ')">
+          <div class="service-icon">🌧️</div>
+          <div class="service-name">አየር ሁኔታ</div>
+        </div>
+        <div class="service-card" onclick="alert('ሆቴል ገጽ')">
+          <div class="service-icon">🏨</div>
+          <div class="service-name">ሆቴል</div>
+        </div>
+        <div class="service-card" onclick="alert('ትኬት ገጽ')">
+          <div class="service-icon">🎫</div>
+          <div class="service-name">ትኬት</div>
+        </div>
+        <div class="service-card" onclick="alert('ቻት ገጽ')">
+          <div class="service-icon">💬</div>
+          <div class="service-name">ቻት</div>
+        </div>
+        <div class="service-card" onclick="alert('Profile ገጽ')">
+          <div class="service-icon">👤</div>
+          <div class="service-name">Profile</div>
+        </div>
       </div>
 
+      <!-- LOOP Family Feed & Post Panel -->
       <section class="panel">
-        <div class="panel-title">አዲስ ፖስት ያድርጉ</div>
+        <div class="section-title">👥 LOOP Family</div>
 
         <textarea
           id="postContent"
           placeholder="ምን እየተሰማዎት ነው?"
         ></textarea>
 
-        <div id="selectedFile" class="selected-file"></div>
+        <div id="selectedFile" style="font-size: 11px; color: #cbd5e1; margin-top: 5px;"></div>
         <div id="statusMessage" class="status"></div>
 
         <div class="toolbar">
           <label class="tool-btn">
             📷 ፎቶ/ቪዲዮ
-            <input
-              id="mediaFile"
-              type="file"
-              accept="image/*,video/*"
-              hidden
-            />
+            <input id="mediaFile" type="file" accept="image/*,video/*" hidden />
           </label>
-
-          <button id="voiceBtn" class="tool-btn" type="button">
-            🎙️ <span id="voiceText">ድምጽ</span>
-          </button>
-
-          <button id="liveBtn" class="tool-btn" type="button">
-            🔴 <span id="liveText">ላይቭ</span>
-          </button>
+          <button id="voiceBtn" class="tool-btn" type="button">🎙️ ድምጽ</button>
+          <button id="liveBtn" class="tool-btn" type="button">🔴 ላይቭ</button>
         </div>
 
         <button id="publishBtn" class="publish-btn" type="button">
-          ፖስት አድርግ
+          ለቀው (ፖስት አድርግ)
         </button>
       </section>
 
       <section id="postsContainer"></section>
     </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+      <button class="nav-item active">
+        <span class="nav-icon">🏠</span>
+        <span>Home</span>
+      </button>
+      <button class="nav-item" onclick="alert('Tourism')">
+        <span class="nav-icon">✈️</span>
+        <span>Tourism</span>
+      </button>
+      <button class="nav-item" onclick="alert('Weather')">
+        <span class="nav-icon">🌧️</span>
+        <span>Weather</span>
+      </button>
+      <button class="nav-item" onclick="alert('Hotel')">
+        <span class="nav-icon">🏨</span>
+        <span>Hotel</span>
+      </button>
+      <button class="nav-item" onclick="alert('Profile')">
+        <span class="nav-icon">👤</span>
+        <span>Profile</span>
+      </button>
+    </nav>
   </div>
 
   <script>
-    // የ Supabase ትክክለኛ መረጃዎች
     const SUPABASE_URL = 'https://chmwdtxktrezasgbbvjr.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_QQAtpXYe2IQqmvpFrRyBXg_GWpnnQqc';
 
-    const supabaseClient = supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_ANON_KEY
-    );
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     const postContent = document.getElementById('postContent');
     const mediaFile = document.getElementById('mediaFile');
@@ -284,393 +375,95 @@
     const statusMessage = document.getElementById('statusMessage');
     const postsContainer = document.getElementById('postsContainer');
     const publishBtn = document.getElementById('publishBtn');
-    const voiceBtn = document.getElementById('voiceBtn');
-    const liveBtn = document.getElementById('liveBtn');
-    const voiceText = document.getElementById('voiceText');
-    const liveText = document.getElementById('liveText');
     const connectionStatus = document.getElementById('connectionStatus');
-
-    let mediaRecorder = null;
-    let mediaStream = null;
-    let recordedChunks = [];
-    let recordedAudioBlob = null;
-    let liveVideoBlob = null;
 
     function setStatus(message, isError = false) {
       statusMessage.textContent = message;
-      statusMessage.className = isError
-        ? 'status error'
-        : 'status';
+      statusMessage.className = isError ? 'status error' : 'status';
     }
 
     function escapeHtml(value) {
       return String(value).replace(/[&<>"']/g, character => ({
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#039;'
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
       }[character]));
     }
 
-    function safeMediaUrl(value) {
-      try {
-        const url = new URL(value);
-
-        if (url.protocol !== 'https:') {
-          return '';
-        }
-
-        return escapeHtml(url.href);
-      } catch {
-        return '';
-      }
-    }
-
-    function getBestMimeType(type) {
-      const audioTypes = [
-        'audio/webm;codecs=opus',
-        'audio/webm',
-        'audio/ogg;codecs=opus'
-      ];
-
-      const videoTypes = [
-        'video/webm;codecs=vp8,opus',
-        'video/webm',
-        'video/mp4'
-      ];
-
-      const types = type === 'audio'
-        ? audioTypes
-        : videoTypes;
-
-      if (!window.MediaRecorder) {
-        return '';
-      }
-
-      return types.find(
-        mimeType => MediaRecorder.isTypeSupported(mimeType)
-      ) || '';
-    }
-
-    function stopStream() {
-      if (mediaStream) {
-        mediaStream.getTracks().forEach(track => track.stop());
-        mediaStream = null;
-      }
-    }
-
     mediaFile.addEventListener('change', () => {
-      recordedAudioBlob = null;
-      liveVideoBlob = null;
-
       if (mediaFile.files && mediaFile.files[0]) {
-        selectedFile.textContent =
-          'የተመረጠ ፋይል: ' + mediaFile.files[0].name;
+        selectedFile.textContent = 'ፋይል ተመርጧል: ' + mediaFile.files[0].name;
       } else {
         selectedFile.textContent = '';
       }
     });
 
-    voiceBtn.addEventListener('click', async () => {
-      if (mediaRecorder && mediaRecorder.state === 'recording') {
-        mediaRecorder.stop();
-        voiceText.textContent = 'ድምጽ';
-        return;
-      }
+    async function uploadMedia(file) {
+      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+      const filePath = `${Date.now()}_${safeName}`;
+      
+      const { error } = await supabaseClient.storage
+        .from('post-media')
+        .upload(filePath, file, { upsert: false, contentType: file.type });
 
-      try {
-        recordedAudioBlob = null;
-        liveVideoBlob = null;
-        mediaFile.value = '';
-        selectedFile.textContent = '';
+      if (error) throw error;
 
-        mediaStream = await navigator.mediaDevices.getUserMedia({
-          audio: true
-        });
-
-        const mimeType = getBestMimeType('audio');
-
-        mediaRecorder = mimeType
-          ? new MediaRecorder(mediaStream, { mimeType })
-          : new MediaRecorder(mediaStream);
-
-        recordedChunks = [];
-
-        mediaRecorder.ondataavailable = event => {
-          if (event.data && event.data.size > 0) {
-            recordedChunks.push(event.data);
-          }
-        };
-
-        mediaRecorder.onstop = () => {
-          const actualType =
-            mediaRecorder.mimeType || 'audio/webm';
-
-          recordedAudioBlob = new Blob(recordedChunks, {
-            type: actualType
-          });
-
-          stopStream();
-          setStatus('የተቀዳ ድምጽ ዝግጁ ነው።');
-          voiceText.textContent = 'ድምጽ';
-        };
-
-        mediaRecorder.start();
-        voiceText.textContent = 'አቁም';
-        setStatus('🔴 ድምጽ በመቅዳት ላይ...');
-
-      } catch (error) {
-        stopStream();
-        console.error(error);
-        setStatus('ማይክሮፎን መጠቀም አልተቻለም።', true);
-      }
-    });
-
-    liveBtn.addEventListener('click', async () => {
-      try {
-        recordedAudioBlob = null;
-        liveVideoBlob = null;
-        mediaFile.value = '';
-        selectedFile.textContent = '';
-
-        mediaStream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-          audio: true
-        });
-
-        const mimeType = getBestMimeType('video');
-
-        mediaRecorder = mimeType
-          ? new MediaRecorder(mediaStream, { mimeType })
-          : new MediaRecorder(mediaStream);
-
-        recordedChunks = [];
-
-        mediaRecorder.ondataavailable = event => {
-          if (event.data && event.data.size > 0) {
-            recordedChunks.push(event.data);
-          }
-        };
-
-        mediaRecorder.onstop = () => {
-          const actualType =
-            mediaRecorder.mimeType || 'video/webm';
-
-          liveVideoBlob = new Blob(recordedChunks, {
-            type: actualType
-          });
-
-          stopStream();
-          setStatus(
-            "🔴 ላይቭ ቪዲዮ ተቀርጿል። 'ፖስት አድርግ' ይጫኑ።"
-          );
-          liveText.textContent = 'ላይቭ';
-        };
-
-        mediaRecorder.start();
-        liveText.textContent = 'በመቅዳት ላይ';
-        setStatus(
-          '🔴 ላይቭ በመቅዳት ላይ... ከ6 ሰከንድ በኋላ ይቆማል።'
-        );
-
-        setTimeout(() => {
-          if (
-            mediaRecorder &&
-            mediaRecorder.state === 'recording'
-          ) {
-            mediaRecorder.stop();
-          }
-        }, 6000);
-
-      } catch (error) {
-        stopStream();
-        console.error(error);
-        setStatus(
-          'ካሜራ ወይም ማይክሮፎን መጠቀም አልተቻለም።',
-          true
-        );
-      }
-    });
-
-    function renderMedia(post) {
-      if (!post.media_url) {
-        return '';
-      }
-
-      const mediaUrl = safeMediaUrl(post.media_url);
-
-      if (!mediaUrl) {
-        return '';
-      }
-
-      if (post.media_type === 'image') {
-        return `
-          <img
-            class="post-media"
-            src="${mediaUrl}"
-            alt="LOOP Family media"
-            loading="lazy"
-          />
-        `;
-      }
-
-      if (
-        post.media_type === 'video' ||
-        post.media_type === 'live'
-      ) {
-        const liveLabel = post.media_type === 'live'
-          ? '<span class="live-label">LIVE RECORDING</span>'
-          : '';
-
-        return `
-          ${liveLabel}
-          <video
-            class="post-media"
-            src="${mediaUrl}"
-            controls
-            preload="metadata"
-          ></video>
-        `;
-      }
-
-      if (post.media_type === 'audio') {
-        return `
-          <audio
-            class="post-audio"
-            src="${mediaUrl}"
-            controls
-            preload="metadata"
-          ></audio>
-        `;
-      }
-
-      return '';
+      const { data } = supabaseClient.storage.from('post-media').getPublicUrl(filePath);
+      return data.publicUrl;
     }
 
     async function fetchPosts() {
       try {
         const { data, error } = await supabaseClient
           .from('posts')
-          .select(
-            'id, content, media_url, media_type, likes, created_at'
-          )
+          .select('*')
           .order('created_at', { ascending: false });
 
-        if (error) {
-          throw error;
-        }
+        if (error) throw error;
 
         postsContainer.innerHTML = '';
 
         if (!data || data.length === 0) {
-          postsContainer.innerHTML = `
-            <div class="empty">
-              ምንም ፖስት የለም። የመጀመሪያውን ፖስት ያድርጉ!
-            </div>
-          `;
+          postsContainer.innerHTML = `<div style="text-align:center; color:#94a3b8; padding:15px;">ምንም ፖስት የለም።</div>`;
           return;
         }
 
         data.forEach(post => {
-          const postCard = document.createElement('article');
-          postCard.className = 'post-card';
+          const card = document.createElement('article');
+          card.className = 'post-card';
 
-          postCard.innerHTML = `
-            <div class="post-content">
-              ${escapeHtml(post.content || '')}
-            </div>
+          let mediaHtml = '';
+          if (post.media_url) {
+            if (post.media_type === 'image') {
+              mediaHtml = `<img class="post-media" src="${escapeHtml(post.media_url)}" />`;
+            } else if (post.media_type === 'video' || post.media_type === 'live') {
+              mediaHtml = `<video class="post-media" src="${escapeHtml(post.media_url)}" controls></video>`;
+            } else if (post.media_type === 'audio') {
+              mediaHtml = `<audio style="width:100%; margin-top:10px;" src="${escapeHtml(post.media_url)}" controls></audio>`;
+            }
+          }
 
-            ${renderMedia(post)}
-
-            <div class="post-footer">
-              <span>
-                ${new Date(post.created_at)
-                  .toLocaleString('am-ET')}
-              </span>
-
-              <button
-                class="like-btn"
-                data-post-id="${post.id}"
-              >
-                ❤️ ${Number(post.likes || 0)}
-              </button>
+          card.innerHTML = `
+            <div class="post-content">${escapeHtml(post.content || '')}</div>
+            ${mediaHtml}
+            <div class="post-actions">
+              <button class="action-btn" onclick="likePost(${post.id}, ${post.likes || 0})">❤️ ላይክ (${post.likes || 0})</button>
+              <button class="action-btn" onclick="alert('ኮሜንት መስጫ ገጽ በቅርቡ ይከፈታል')">💬 ኮሜንት</button>
+              <button class="action-btn" onclick="alert('ሊንኩ ተገልብጧል!')">ሼር</button>
+              <button class="action-btn" onclick="alert('ጓደኝነት ጥያቄ ተልኳል')">➕ አድ ፍሬንድ</button>
             </div>
           `;
-
-          postsContainer.appendChild(postCard);
+          postsContainer.appendChild(card);
         });
-
-        document.querySelectorAll('.like-btn').forEach(button => {
-          button.addEventListener('click', () => {
-            likePost(Number(button.dataset.postId));
-          });
-        });
-
-      } catch (error) {
-        console.error('fetchPosts error:', error);
-
-        postsContainer.innerHTML = `
-          <div class="empty error">
-            ፖስቶችን ማምጣት አልተቻለም።
-          </div>
-        `;
+      } catch (err) {
+        console.error(err);
       }
-    }
-
-    async function uploadMedia(file) {
-      const safeName = file.name
-        .replace(/[^a-zA-Z0-9._-]/g, '_');
-
-      const randomId =
-        window.crypto && crypto.randomUUID
-          ? crypto.randomUUID()
-          : Math.random().toString(36).slice(2);
-
-      const filePath =
-        `${Date.now()}_${randomId}_${safeName}`;
-
-      const { error: uploadError } =
-        await supabaseClient.storage
-          .from('post-media')
-          .upload(filePath, file, {
-            upsert: false,
-            contentType: file.type
-          });
-
-      if (uploadError) {
-        throw uploadError;
-      }
-
-      const { data } = supabaseClient.storage
-        .from('post-media')
-        .getPublicUrl(filePath);
-
-      if (!data || !data.publicUrl) {
-        throw new Error('Public media URL አልተገኘም።');
-      }
-
-      return data.publicUrl;
     }
 
     async function createPost() {
       const text = postContent.value.trim();
+      const file = mediaFile.files[0];
 
-      const selectedUpload =
-        mediaFile.files && mediaFile.files[0]
-          ? mediaFile.files[0]
-          : null;
-
-      if (
-        !text &&
-        !selectedUpload &&
-        !recordedAudioBlob &&
-        !liveVideoBlob
-      ) {
-        setStatus(
-          'ጽሁፍ፣ ፎቶ፣ ድምጽ ወይም ቪዲዮ ያስገቡ።',
-          true
-        );
+      if (!text && !file) {
+        setStatus('እባክዎ ጽሁፍ ወይም ፎቶ ያስገቡ።', true);
         return;
       }
 
@@ -679,173 +472,58 @@
       setStatus('በመላክ ላይ...');
 
       try {
-        let uploadFile = null;
+        let mediaUrl = null;
         let mediaType = null;
 
-        if (selectedUpload) {
-          uploadFile = selectedUpload;
-          mediaType = selectedUpload.type.startsWith('video')
-            ? 'video'
-            : 'image';
-
-        } else if (recordedAudioBlob) {
-          const type =
-            recordedAudioBlob.type || 'audio/webm';
-
-          const extension =
-            type.includes('ogg') ? 'ogg' : 'webm';
-
-          uploadFile = new File(
-            [recordedAudioBlob],
-            `voice.${extension}`,
-            { type }
-          );
-
-          mediaType = 'audio';
-
-        } else if (liveVideoBlob) {
-          const type =
-            liveVideoBlob.type || 'video/webm';
-
-          const extension =
-            type.includes('mp4') ? 'mp4' : 'webm';
-
-          uploadFile = new File(
-            [liveVideoBlob],
-            `live.${extension}`,
-            { type }
-          );
-
-          mediaType = 'live';
+        if (file) {
+          mediaUrl = await uploadMedia(file);
+          mediaType = file.type.startsWith('video') ? 'video' : 'image';
         }
 
-        let mediaUrl = null;
+        const { error } = await supabaseClient.from('posts').insert({
+          content: text,
+          media_url: mediaUrl,
+          media_type: mediaType,
+          likes: 0
+        });
 
-        if (uploadFile) {
-          mediaUrl = await uploadMedia(uploadFile);
-        }
-
-        const { error } = await supabaseClient
-          .from('posts')
-          .insert({
-            content: text ||
-              (mediaType === 'live'
-                ? '🔴 Live Broadcast'
-                : ''),
-            media_url: mediaUrl,
-            media_type: mediaType,
-            likes: 0
-          });
-
-        if (error) {
-          throw error;
-        }
+        if (error) throw error;
 
         postContent.value = '';
         mediaFile.value = '';
         selectedFile.textContent = '';
-        recordedAudioBlob = null;
-        liveVideoBlob = null;
-
-        setStatus('✅ ፖስቱ ተሳክቶ ተልኳል።');
-        await fetchPosts();
-
-      } catch (error) {
-        console.error('createPost error:', error);
-        setStatus(
-          'ፖስቱ መላክ አልተቻለም: ' +
-          (error.message || error),
-          true
-        );
+        setStatus('✅ ተሳክቶ ተለጥፏል!');
+        fetchPosts();
+      } catch (err) {
+        setStatus('ማስተላለፍ አልተቻለም: ' + err.message, true);
       } finally {
         publishBtn.disabled = false;
-        publishBtn.textContent = 'ፖስት አድርግ';
+        publishBtn.textContent = 'ለቀው (ፖስት አድርግ)';
       }
     }
 
-    async function likePost(postId) {
+    async function likePost(id, currentLikes) {
       try {
-        const { data: post, error: readError } =
-          await supabaseClient
-            .from('posts')
-            .select('likes')
-            .eq('id', postId)
-            .single();
-
-        if (readError) {
-          throw readError;
-        }
-
-        const { error: updateError } =
-          await supabaseClient
-            .from('posts')
-            .update({
-              likes: Number(post.likes || 0) + 1
-            })
-            .eq('id', postId);
-
-        if (updateError) {
-          throw updateError;
-        }
-
-        await fetchPosts();
-
-      } catch (error) {
-        console.error('likePost error:', error);
-        setStatus('Like ማድረግ አልተቻለም።', true);
+        await supabaseClient.from('posts').update({ likes: currentLikes + 1 }).eq('id', id);
+        fetchPosts();
+      } catch (err) {
+        console.error(err);
       }
     }
 
     publishBtn.addEventListener('click', createPost);
-
     fetchPosts();
 
-    const loopFamilyChannel = supabaseClient
+    // Realtime connection
+    supabaseClient
       .channel('loop-family-posts')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'posts'
-        },
-        payload => {
-          console.log('LOOP Family update:', payload);
-          fetchPosts();
-        }
-      )
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'posts' }, () => fetchPosts())
       .subscribe(status => {
-        console.log('Realtime status:', status);
-
         if (status === 'SUBSCRIBED') {
-          connectionStatus.textContent =
-            '✅ LOOP Family Realtime connected';
+          connectionStatus.textContent = '✅ ተገናኝቷል (Realtime Active)';
           connectionStatus.style.color = '#4ade80';
         }
-
-        if (status === 'CHANNEL_ERROR') {
-          connectionStatus.textContent =
-            '❌ Realtime channel error';
-          connectionStatus.style.color = '#f87171';
-        }
-
-        if (status === 'TIMED_OUT') {
-          connectionStatus.textContent =
-            '⚠️ Realtime connection timed out';
-          connectionStatus.style.color = '#facc15';
-        }
-
-        if (status === 'CLOSED') {
-          connectionStatus.textContent =
-            '⚠️ Realtime channel closed';
-          connectionStatus.style.color = '#facc15';
-        }
       });
-
-    window.addEventListener('beforeunload', () => {
-      supabaseClient.removeChannel(loopFamilyChannel);
-      stopStream();
-    });
   </script>
 </body>
 </html>
